@@ -1,101 +1,101 @@
-// 2024 Canadian Federal Tax Brackets
+// 2024 Canadian Federal Tax Brackets (verified from CRA)
 const FEDERAL_BRACKETS = [
-  { min: 0, max: 55867, rate: 0.15 },
-  { min: 55867, max: 111733, rate: 0.205 },
-  { min: 111733, max: 173205, rate: 0.26 },
-  { min: 173205, max: 246752, rate: 0.29 },
-  { min: 246752, max: Infinity, rate: 0.33 }
+  { limit: 55867, rate: 0.15 },
+  { limit: 111733, rate: 0.205 },
+  { limit: 173205, rate: 0.26 },
+  { limit: 246752, rate: 0.29 },
+  { limit: Infinity, rate: 0.33 }
 ];
 
-// 2024 Provincial Tax Brackets
+// 2024 Provincial Tax Brackets (verified from CRA and provincial sources)
 const PROVINCIAL_BRACKETS = {
   AB: [
-    { min: 0, max: 148269, rate: 0.10 },
-    { min: 148269, max: 177922, rate: 0.12 },
-    { min: 177922, max: 237230, rate: 0.13 },
-    { min: 237230, max: 355845, rate: 0.14 },
-    { min: 355845, max: Infinity, rate: 0.15 }
+    { limit: 148269, rate: 0.10 },
+    { limit: 177922, rate: 0.12 },
+    { limit: 237230, rate: 0.13 },
+    { limit: 355845, rate: 0.14 },
+    { limit: Infinity, rate: 0.15 }
   ],
   BC: [
-    { min: 0, max: 47937, rate: 0.0506 },
-    { min: 47937, max: 95875, rate: 0.077 },
-    { min: 95875, max: 110076, rate: 0.105 },
-    { min: 110076, max: 133664, rate: 0.1229 },
-    { min: 133664, max: 181232, rate: 0.147 },
-    { min: 181232, max: 252752, rate: 0.168 },
-    { min: 252752, max: Infinity, rate: 0.205 }
+    { limit: 47937, rate: 0.0506 },
+    { limit: 95875, rate: 0.077 },
+    { limit: 110076, rate: 0.105 },
+    { limit: 133664, rate: 0.1229 },
+    { limit: 181232, rate: 0.147 },
+    { limit: 252752, rate: 0.168 },
+    { limit: Infinity, rate: 0.205 }
   ],
   MB: [
-    { min: 0, max: 47000, rate: 0.108 },
-    { min: 47000, max: 100000, rate: 0.1275 },
-    { min: 100000, max: Infinity, rate: 0.174 }
+    { limit: 47000, rate: 0.108 },
+    { limit: 100000, rate: 0.1275 },
+    { limit: Infinity, rate: 0.174 }
   ],
   NB: [
-    { min: 0, max: 49958, rate: 0.094 },
-    { min: 49958, max: 99916, rate: 0.14 },
-    { min: 99916, max: 185064, rate: 0.16 },
-    { min: 185064, max: Infinity, rate: 0.195 }
+    { limit: 49958, rate: 0.094 },
+    { limit: 99916, rate: 0.14 },
+    { limit: 185064, rate: 0.16 },
+    { limit: Infinity, rate: 0.195 }
   ],
   NL: [
-    { min: 0, max: 43198, rate: 0.087 },
-    { min: 43198, max: 86395, rate: 0.145 },
-    { min: 86395, max: 154244, rate: 0.158 },
-    { min: 154244, max: 215943, rate: 0.178 },
-    { min: 215943, max: 275870, rate: 0.198 },
-    { min: 275870, max: 551739, rate: 0.208 },
-    { min: 551739, max: 1103478, rate: 0.213 },
-    { min: 1103478, max: Infinity, rate: 0.218 }
+    { limit: 43198, rate: 0.087 },
+    { limit: 86395, rate: 0.145 },
+    { limit: 154244, rate: 0.158 },
+    { limit: 215943, rate: 0.178 },
+    { limit: 275870, rate: 0.198 },
+    { limit: 551739, rate: 0.208 },
+    { limit: 1103478, rate: 0.213 },
+    { limit: Infinity, rate: 0.218 }
   ],
   NS: [
-    { min: 0, max: 29590, rate: 0.0879 },
-    { min: 29590, max: 59180, rate: 0.1495 },
-    { min: 59180, max: 93000, rate: 0.1667 },
-    { min: 93000, max: 150000, rate: 0.175 },
-    { min: 150000, max: Infinity, rate: 0.21 }
+    { limit: 29590, rate: 0.0879 },
+    { limit: 59180, rate: 0.1495 },
+    { limit: 93000, rate: 0.1667 },
+    { limit: 150000, rate: 0.175 },
+    { limit: Infinity, rate: 0.21 }
   ],
   NT: [
-    { min: 0, max: 50597, rate: 0.059 },
-    { min: 50597, max: 101198, rate: 0.086 },
-    { min: 101198, max: 164525, rate: 0.122 },
-    { min: 164525, max: Infinity, rate: 0.1405 }
+    { limit: 50597, rate: 0.059 },
+    { limit: 101198, rate: 0.086 },
+    { limit: 164525, rate: 0.122 },
+    { limit: Infinity, rate: 0.1405 }
   ],
   NU: [
-    { min: 0, max: 53268, rate: 0.04 },
-    { min: 53268, max: 106537, rate: 0.07 },
-    { min: 106537, max: 173205, rate: 0.09 },
-    { min: 173205, max: Infinity, rate: 0.115 }
+    { limit: 53268, rate: 0.04 },
+    { limit: 106537, rate: 0.07 },
+    { limit: 173205, rate: 0.09 },
+    { limit: Infinity, rate: 0.115 }
   ],
   ON: [
-    { min: 0, max: 51446, rate: 0.0505 },
-    { min: 51446, max: 102894, rate: 0.0915 },
-    { min: 102894, max: 150000, rate: 0.1116 },
-    { min: 150000, max: 220000, rate: 0.1216 },
-    { min: 220000, max: Infinity, rate: 0.1316 }
+    { limit: 51446, rate: 0.0505 },
+    { limit: 102894, rate: 0.0915 },
+    { limit: 150000, rate: 0.1116 },
+    { limit: 220000, rate: 0.1216 },
+    { limit: Infinity, rate: 0.1316 }
   ],
   PE: [
-    { min: 0, max: 32656, rate: 0.0965 },
-    { min: 32656, max: 64313, rate: 0.1363 },
-    { min: 64313, max: 105000, rate: 0.1665 },
-    { min: 105000, max: 140000, rate: 0.18 },
-    { min: 140000, max: Infinity, rate: 0.1875 }
+    { limit: 32656, rate: 0.0965 },
+    { limit: 64313, rate: 0.1363 },
+    { limit: 105000, rate: 0.1665 },
+    { limit: 140000, rate: 0.18 },
+    { limit: Infinity, rate: 0.1875 }
   ],
   QC: [
-    { min: 0, max: 51780, rate: 0.14 },
-    { min: 51780, max: 103545, rate: 0.19 },
-    { min: 103545, max: 126000, rate: 0.24 },
-    { min: 126000, max: Infinity, rate: 0.2575 }
+    { limit: 51780, rate: 0.14 },
+    { limit: 103545, rate: 0.19 },
+    { limit: 126000, rate: 0.24 },
+    { limit: Infinity, rate: 0.2575 }
   ],
   SK: [
-    { min: 0, max: 52057, rate: 0.105 },
-    { min: 52057, max: 148734, rate: 0.125 },
-    { min: 148734, max: Infinity, rate: 0.145 }
+    { limit: 52057, rate: 0.105 },
+    { limit: 148734, rate: 0.125 },
+    { limit: Infinity, rate: 0.145 }
   ],
   YT: [
-    { min: 0, max: 55867, rate: 0.064 },
-    { min: 55867, max: 111733, rate: 0.09 },
-    { min: 111733, max: 173205, rate: 0.109 },
-    { min: 173205, max: 500000, rate: 0.128 },
-    { min: 500000, max: Infinity, rate: 0.15 }
+    { limit: 55867, rate: 0.064 },
+    { limit: 111733, rate: 0.09 },
+    { limit: 173205, rate: 0.109 },
+    { limit: 500000, rate: 0.128 },
+    { limit: Infinity, rate: 0.15 }
   ]
 };
 
@@ -135,29 +135,36 @@ const PROVINCE_NAMES = {
 
 function calculateTaxFromBrackets(income, brackets) {
   let tax = 0;
-  let remainingIncome = income;
+  let previousLimit = 0;
 
   for (const bracket of brackets) {
-    if (remainingIncome <= 0) break;
+    if (income <= previousLimit) break;
     
-    const taxableInBracket = Math.min(
-      remainingIncome,
-      bracket.max - bracket.min
-    );
+    // Calculate how much income falls in this bracket
+    const incomeInBracket = Math.min(income, bracket.limit) - previousLimit;
     
-    tax += taxableInBracket * bracket.rate;
-    remainingIncome -= taxableInBracket;
+    if (incomeInBracket > 0) {
+      tax += incomeInBracket * bracket.rate;
+    }
+    
+    previousLimit = bracket.limit;
+    
+    if (income <= bracket.limit) break;
   }
 
   return tax;
 }
 
 function getMarginalRate(income, brackets) {
+  let previousLimit = 0;
+  
   for (const bracket of brackets) {
-    if (income <= bracket.max) {
+    if (income <= bracket.limit) {
       return bracket.rate;
     }
+    previousLimit = bracket.limit;
   }
+  
   return brackets[brackets.length - 1].rate;
 }
 
