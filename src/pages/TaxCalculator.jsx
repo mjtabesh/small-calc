@@ -57,7 +57,7 @@ export default function TaxCalculatorPage() {
               </div>
               <div>
                 <h1 className="text-lg font-bold text-slate-900">Canada Tax Calculator</h1>
-                <p className="text-xs text-slate-500">2024 Tax Year Estimate</p>
+                <p className="text-xs text-slate-500">2025 Tax Year Estimate</p>
               </div>
             </div>
             <Button
@@ -190,7 +190,7 @@ export default function TaxCalculatorPage() {
               className="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100"
             >
               <p className="text-xs text-amber-800 leading-relaxed">
-                <strong>Disclaimer:</strong> This calculator provides estimates based on 2024 
+                <strong>Disclaimer:</strong> This calculator provides estimates based on 2025 
                 tax rates and brackets. Actual taxes may vary. This is not professional tax 
                 advice. Consult a qualified tax professional for your specific situation.
               </p>
@@ -203,7 +203,7 @@ export default function TaxCalculatorPage() {
       <footer className="border-t border-slate-100 mt-12 py-6">
         <div className="max-w-6xl mx-auto px-4">
           <p className="text-center text-xs text-slate-400">
-            © {new Date().getFullYear()} Canada Tax Calculator • For estimation purposes only
+            © {new Date().getFullYear()} Canada Tax Calculator • 2025 Tax Year • For estimation purposes only
           </p>
         </div>
       </footer>

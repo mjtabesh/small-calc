@@ -1,120 +1,122 @@
-// 2024 Canadian Federal Tax Brackets (verified from CRA)
+// 2025 Canadian Federal Tax Brackets (from CRA)
+// Note: 14.5% effective rate for 2025 (15% reduced to 14% starting July 1, 2025)
 const FEDERAL_BRACKETS = [
-  { limit: 55867, rate: 0.15 },
-  { limit: 111733, rate: 0.205 },
-  { limit: 173205, rate: 0.26 },
-  { limit: 246752, rate: 0.29 },
+  { limit: 57375, rate: 0.145 },
+  { limit: 114750, rate: 0.205 },
+  { limit: 177882, rate: 0.26 },
+  { limit: 253414, rate: 0.29 },
   { limit: Infinity, rate: 0.33 }
 ];
 
-// 2024 Provincial Tax Brackets (verified from CRA and provincial sources)
+// 2025 Provincial Tax Brackets (from CRA and provincial sources)
 const PROVINCIAL_BRACKETS = {
   AB: [
-    { limit: 148269, rate: 0.10 },
-    { limit: 177922, rate: 0.12 },
-    { limit: 237230, rate: 0.13 },
-    { limit: 355845, rate: 0.14 },
+    { limit: 60000, rate: 0.08 },
+    { limit: 151234, rate: 0.10 },
+    { limit: 181481, rate: 0.12 },
+    { limit: 241974, rate: 0.13 },
+    { limit: 362961, rate: 0.14 },
     { limit: Infinity, rate: 0.15 }
   ],
   BC: [
-    { limit: 47937, rate: 0.0506 },
-    { limit: 95875, rate: 0.077 },
-    { limit: 110076, rate: 0.105 },
-    { limit: 133664, rate: 0.1229 },
-    { limit: 181232, rate: 0.147 },
-    { limit: 252752, rate: 0.168 },
+    { limit: 49279, rate: 0.0506 },
+    { limit: 98560, rate: 0.077 },
+    { limit: 113158, rate: 0.105 },
+    { limit: 137407, rate: 0.1229 },
+    { limit: 186306, rate: 0.147 },
+    { limit: 259829, rate: 0.168 },
     { limit: Infinity, rate: 0.205 }
   ],
   MB: [
-    { limit: 47000, rate: 0.108 },
-    { limit: 100000, rate: 0.1275 },
+    { limit: 47564, rate: 0.108 },
+    { limit: 101200, rate: 0.1275 },
     { limit: Infinity, rate: 0.174 }
   ],
   NB: [
-    { limit: 49958, rate: 0.094 },
-    { limit: 99916, rate: 0.14 },
-    { limit: 185064, rate: 0.16 },
+    { limit: 51306, rate: 0.094 },
+    { limit: 102614, rate: 0.14 },
+    { limit: 190060, rate: 0.16 },
     { limit: Infinity, rate: 0.195 }
   ],
   NL: [
-    { limit: 43198, rate: 0.087 },
-    { limit: 86395, rate: 0.145 },
-    { limit: 154244, rate: 0.158 },
-    { limit: 215943, rate: 0.178 },
-    { limit: 275870, rate: 0.198 },
-    { limit: 551739, rate: 0.208 },
-    { limit: 1103478, rate: 0.213 },
+    { limit: 44192, rate: 0.087 },
+    { limit: 88382, rate: 0.145 },
+    { limit: 157792, rate: 0.158 },
+    { limit: 220910, rate: 0.178 },
+    { limit: 282214, rate: 0.198 },
+    { limit: 564429, rate: 0.208 },
+    { limit: 1128858, rate: 0.213 },
     { limit: Infinity, rate: 0.218 }
   ],
   NS: [
-    { limit: 29590, rate: 0.0879 },
-    { limit: 59180, rate: 0.1495 },
-    { limit: 93000, rate: 0.1667 },
-    { limit: 150000, rate: 0.175 },
+    { limit: 30507, rate: 0.0879 },
+    { limit: 61015, rate: 0.1495 },
+    { limit: 95883, rate: 0.1667 },
+    { limit: 154650, rate: 0.175 },
     { limit: Infinity, rate: 0.21 }
   ],
   NT: [
-    { limit: 50597, rate: 0.059 },
-    { limit: 101198, rate: 0.086 },
-    { limit: 164525, rate: 0.122 },
+    { limit: 51964, rate: 0.059 },
+    { limit: 103930, rate: 0.086 },
+    { limit: 168967, rate: 0.122 },
     { limit: Infinity, rate: 0.1405 }
   ],
   NU: [
-    { limit: 53268, rate: 0.04 },
-    { limit: 106537, rate: 0.07 },
-    { limit: 173205, rate: 0.09 },
+    { limit: 54707, rate: 0.04 },
+    { limit: 109413, rate: 0.07 },
+    { limit: 177881, rate: 0.09 },
     { limit: Infinity, rate: 0.115 }
   ],
   ON: [
-    { limit: 51446, rate: 0.0505 },
-    { limit: 102894, rate: 0.0915 },
+    { limit: 52886, rate: 0.0505 },
+    { limit: 105775, rate: 0.0915 },
     { limit: 150000, rate: 0.1116 },
     { limit: 220000, rate: 0.1216 },
     { limit: Infinity, rate: 0.1316 }
   ],
   PE: [
-    { limit: 32656, rate: 0.0965 },
-    { limit: 64313, rate: 0.1363 },
-    { limit: 105000, rate: 0.1665 },
-    { limit: 140000, rate: 0.18 },
-    { limit: Infinity, rate: 0.1875 }
+    { limit: 33328, rate: 0.095 },
+    { limit: 64656, rate: 0.1347 },
+    { limit: 105000, rate: 0.166 },
+    { limit: 140000, rate: 0.1762 },
+    { limit: Infinity, rate: 0.19 }
   ],
   QC: [
-    { limit: 51780, rate: 0.14 },
-    { limit: 103545, rate: 0.19 },
-    { limit: 126000, rate: 0.24 },
+    { limit: 53255, rate: 0.14 },
+    { limit: 106495, rate: 0.19 },
+    { limit: 129590, rate: 0.24 },
     { limit: Infinity, rate: 0.2575 }
   ],
   SK: [
-    { limit: 52057, rate: 0.105 },
-    { limit: 148734, rate: 0.125 },
+    { limit: 53463, rate: 0.105 },
+    { limit: 152750, rate: 0.125 },
     { limit: Infinity, rate: 0.145 }
   ],
   YT: [
-    { limit: 55867, rate: 0.064 },
-    { limit: 111733, rate: 0.09 },
-    { limit: 173205, rate: 0.109 },
+    { limit: 57375, rate: 0.064 },
+    { limit: 114750, rate: 0.09 },
+    { limit: 177882, rate: 0.109 },
     { limit: 500000, rate: 0.128 },
     { limit: Infinity, rate: 0.15 }
   ]
 };
 
-// Basic Personal Amounts 2024
-const FEDERAL_BPA = 15705;
+// Basic Personal Amounts 2025
+const FEDERAL_BPA = 16129;
 const PROVINCIAL_BPA = {
-  AB: 21003,
-  BC: 12580,
+  AB: 22331,
+  BC: 12936,
   MB: 15780,
-  NB: 13044,
+  NB: 13399,
   NL: 10818,
-  NS: 8481,
-  NT: 17373,
-  NU: 18767,
+  NS: 8744,
+  NT: 17840,
+  NU: 19268,
   ON: 12399,
-  PE: 13500,
-  QC: 18056,
-  SK: 18491,
-  YT: 15705
+  PE: 13750,
+  QC: 18591,
+  SK: 18982,
+  YT: 16129
 };
 
 const PROVINCE_NAMES = {
