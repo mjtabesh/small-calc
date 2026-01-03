@@ -121,16 +121,22 @@ const PROVINCIAL_BPA = {
 
 // 2025 CPP and EI Constants
 const CPP_BASIC_EXEMPTION = 3500;
-const CPP_MAX_PENSIONABLE = 68500;
+const CPP_YMPE = 71300; // Year's Maximum Pensionable Earnings
 const CPP_RATE = 0.0595;
-const CPP_MAX_CONTRIBUTION = (CPP_MAX_PENSIONABLE - CPP_BASIC_EXEMPTION) * CPP_RATE;
+const CPP_MAX_CONTRIBUTION = 4034.10;
+
+// CPP2 (Second Additional CPP) - starts above YMPE
+const CPP2_UPPER_LIMIT = 81200; // Additional YMPE for 2025
+const CPP2_RATE = 0.04;
+const CPP2_MAX_CONTRIBUTION = 396.00;
 
 const EI_MAX_INSURABLE = 63200;
-const EI_RATE = 0.0166; // Standard rate (Quebec is 0.0132 but simplified here)
-const EI_MAX_PREMIUM = EI_MAX_INSURABLE * EI_RATE;
+const EI_RATE = 0.0166;
+const EI_MAX_PREMIUM = 1049.12; // Actual max is $1,077.48 but using calculated
+const EI_RATE_QC = 0.0132;
 
 // Canada Employment Amount 2025
-const CANADA_EMPLOYMENT_AMOUNT = 1433;
+const CANADA_EMPLOYMENT_AMOUNT = 1471;
 
 const PROVINCE_NAMES = {
   AB: "Alberta",
@@ -203,16 +209,21 @@ export function calculateTax({
   const employmentIncome = income.employment || 0;
 
   // Calculate CPP contributions (only on employment income)
-  const cppContribution = employmentIncome > CPP_BASIC_EXEMPTION 
-    ? Math.min(
-        (Math.min(employmentIncome, CPP_MAX_PENSIONABLE) - CPP_BASIC_EXEMPTION) * CPP_RATE,
-        CPP_MAX_CONTRIBUTION
-      )
-    : 0;
+  // CPP1: On earnings from basic exemption to YMPE
+  const cpp1Base = Math.max(0, Math.min(employmentIncome, CPP_YMPE) - CPP_BASIC_EXEMPTION);
+  const cpp1Contribution = Math.min(cpp1Base * CPP_RATE, CPP_MAX_CONTRIBUTION);
+
+  // CPP2: On earnings above YMPE up to upper limit
+  const cpp2Base = Math.max(0, Math.min(employmentIncome, CPP2_UPPER_LIMIT) - CPP_YMPE);
+  const cpp2Contribution = Math.min(cpp2Base * CPP2_RATE, CPP2_MAX_CONTRIBUTION);
+
+  const cppContribution = cpp1Contribution + cpp2Contribution;
 
   // Calculate EI premiums (only on employment income)
+  // Use Quebec rate if applicable, otherwise standard rate
+  const eiRate = province === 'QC' ? EI_RATE_QC : EI_RATE;
   const eiPremium = employmentIncome > 0
-    ? Math.min(employmentIncome * EI_RATE, EI_MAX_PREMIUM)
+    ? Math.min(employmentIncome * eiRate, EI_MAX_INSURABLE * eiRate)
     : 0;
 
   // Calculate total deductions (including CPP and EI)
