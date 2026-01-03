@@ -132,8 +132,9 @@ const CPP2_MAX_CONTRIBUTION = 396.00;
 
 const EI_MAX_INSURABLE = 63200;
 const EI_RATE = 0.0166;
-const EI_MAX_PREMIUM = 1049.12; // Actual max is $1,077.48 but using calculated
+const EI_MAX_PREMIUM = 1077.48;
 const EI_RATE_QC = 0.0132;
+const EI_MAX_PREMIUM_QC = 834.24; // Quebec has lower rate
 
 // Canada Employment Amount 2025
 const CANADA_EMPLOYMENT_AMOUNT = 1471;
@@ -222,8 +223,9 @@ export function calculateTax({
   // Calculate EI premiums (only on employment income)
   // Use Quebec rate if applicable, otherwise standard rate
   const eiRate = province === 'QC' ? EI_RATE_QC : EI_RATE;
+  const eiMaxPremium = province === 'QC' ? EI_MAX_PREMIUM_QC : EI_MAX_PREMIUM;
   const eiPremium = employmentIncome > 0
-    ? Math.min(employmentIncome * eiRate, EI_MAX_INSURABLE * eiRate)
+    ? Math.min(employmentIncome * eiRate, eiMaxPremium)
     : 0;
 
   // Calculate total deductions (NOT including CPP and EI - those are credits)
