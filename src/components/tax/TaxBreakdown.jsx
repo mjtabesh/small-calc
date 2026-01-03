@@ -22,6 +22,8 @@ export default function TaxBreakdown({ results }) {
     federalTax,
     provincialTax,
     totalTax,
+    cppContribution,
+    eiPremium,
     netIncome,
     effectiveRate,
     marginalRate,
@@ -82,22 +84,61 @@ export default function TaxBreakdown({ results }) {
             {formatCurrency(provincialTax)}
           </div>
         </motion.div>
+
+        {cppContribution > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <PiggyBank className="h-4 w-4 text-purple-600" />
+              <span className="text-xs font-medium text-slate-500">CPP Contribution</span>
+            </div>
+            <div className="text-xl font-semibold text-slate-900">
+              {formatCurrency(cppContribution)}
+            </div>
+          </motion.div>
+        )}
+
+        {eiPremium > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.25 }}
+            className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <Receipt className="h-4 w-4 text-indigo-600" />
+              <span className="text-xs font-medium text-slate-500">EI Premium</span>
+            </div>
+            <div className="text-xl font-semibold text-slate-900">
+              {formatCurrency(eiPremium)}
+            </div>
+          </motion.div>
+        )}
       </div>
 
-      {/* Total Tax */}
+      {/* Total Deductions */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.3 }}
         className="bg-red-50 rounded-xl p-4 border border-red-100"
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Receipt className="h-4 w-4 text-red-600" />
-            <span className="text-sm font-medium text-red-800">Total Tax Payable</span>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Receipt className="h-4 w-4 text-red-600" />
+              <span className="text-sm font-medium text-red-800">Total Deductions</span>
+            </div>
+            <div className="text-xl font-bold text-red-700">
+              {formatCurrency(totalTax + cppContribution + eiPremium)}
+            </div>
           </div>
-          <div className="text-xl font-bold text-red-700">
-            {formatCurrency(totalTax)}
+          <div className="text-xs text-red-600 pl-6">
+            Tax: {formatCurrency(totalTax)} • CPP: {formatCurrency(cppContribution)} • EI: {formatCurrency(eiPremium)}
           </div>
         </div>
       </motion.div>

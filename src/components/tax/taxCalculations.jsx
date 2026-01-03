@@ -119,6 +119,19 @@ const PROVINCIAL_BPA = {
   YT: 16129
 };
 
+// 2025 CPP and EI Constants
+const CPP_BASIC_EXEMPTION = 3500;
+const CPP_MAX_PENSIONABLE = 68500;
+const CPP_RATE = 0.0595;
+const CPP_MAX_CONTRIBUTION = (CPP_MAX_PENSIONABLE - CPP_BASIC_EXEMPTION) * CPP_RATE;
+
+const EI_MAX_INSURABLE = 63200;
+const EI_RATE = 0.0166; // Standard rate (Quebec is 0.0132 but simplified here)
+const EI_MAX_PREMIUM = EI_MAX_INSURABLE * EI_RATE;
+
+// Canada Employment Amount 2025
+const CANADA_EMPLOYMENT_AMOUNT = 1433;
+
 const PROVINCE_NAMES = {
   AB: "Alberta",
   BC: "British Columbia",
@@ -187,43 +200,73 @@ export function calculateTax({
     (income.eiIncome || 0) +
     (income.other || 0);
 
-  // Calculate total deductions
+  const employmentIncome = income.employment || 0;
+
+  // Calculate CPP contributions (only on employment income)
+  const cppContribution = employmentIncome > CPP_BASIC_EXEMPTION 
+    ? Math.min(
+        (Math.min(employmentIncome, CPP_MAX_PENSIONABLE) - CPP_BASIC_EXEMPTION) * CPP_RATE,
+        CPP_MAX_CONTRIBUTION
+      )
+    : 0;
+
+  // Calculate EI premiums (only on employment income)
+  const eiPremium = employmentIncome > 0
+    ? Math.min(employmentIncome * EI_RATE, EI_MAX_PREMIUM)
+    : 0;
+
+  // Calculate total deductions (including CPP and EI)
   const totalDeductions = 
     (deductions.rrsp || 0) +
     (deductions.unionDues || 0) +
     (deductions.childcare || 0) +
     (deductions.movingExpenses || 0) +
     (deductions.supportPayments || 0) +
-    (deductions.other || 0);
+    (deductions.other || 0) +
+    cppContribution +
+    eiPremium;
 
   // Calculate taxable income
   const taxableIncome = Math.max(0, totalIncome - totalDeductions);
 
   // Calculate federal tax
-  const federalBPA = credits.disableBasicPersonal ? 0 : FEDERAL_BPA;
-  const federalTaxableIncome = Math.max(0, taxableIncome - federalBPA);
-  let federalTax = calculateTaxFromBrackets(federalTaxableIncome, FEDERAL_BRACKETS);
+  let federalTax = calculateTaxFromBrackets(taxableIncome, FEDERAL_BRACKETS);
 
-  // Apply federal credits
+  // Calculate federal non-refundable tax credits
+  const federalBPA = credits.disableBasicPersonal ? 0 : FEDERAL_BPA;
+  
+  // Canada Employment Amount (if there's employment income)
+  const canadaEmploymentAmount = employmentIncome > 0 
+    ? Math.min(CANADA_EMPLOYMENT_AMOUNT, employmentIncome) 
+    : 0;
+
+  // CPP and EI contribution credits
+  const cppEiCreditsAmount = cppContribution + eiPremium;
+
+  // Total federal credits at 14.5% (2025 rate)
   const federalCreditsAmount = 
-    (credits.medicalExpenses || 0) * 0.15 +
-    (credits.donations || 0) * 0.15 +
-    (credits.tuition || 0) * 0.15 +
-    (credits.disability ? 9428 * 0.15 : 0) +
-    (credits.age65Plus ? 8790 * 0.15 : 0) +
-    (credits.spouseAmount || 0) * 0.15;
+    federalBPA * 0.145 +
+    canadaEmploymentAmount * 0.145 +
+    cppEiCreditsAmount * 0.145 +
+    (credits.medicalExpenses || 0) * 0.145 +
+    (credits.donations || 0) * 0.145 +
+    (credits.tuition || 0) * 0.145 +
+    (credits.disability ? 9428 * 0.145 : 0) +
+    (credits.age65Plus ? 8790 * 0.145 : 0) +
+    (credits.spouseAmount || 0) * 0.145;
 
   federalTax = Math.max(0, federalTax - federalCreditsAmount);
 
   // Calculate provincial tax
-  const provincialBPA = credits.disableBasicPersonal ? 0 : (PROVINCIAL_BPA[province] || 0);
   const provincialBrackets = PROVINCIAL_BRACKETS[province] || PROVINCIAL_BRACKETS.ON;
-  const provincialTaxableIncome = Math.max(0, taxableIncome - provincialBPA);
-  let provincialTax = calculateTaxFromBrackets(provincialTaxableIncome, provincialBrackets);
+  let provincialTax = calculateTaxFromBrackets(taxableIncome, provincialBrackets);
 
-  // Apply provincial credits (simplified - using lowest provincial rate)
+  // Apply provincial non-refundable tax credits
+  const provincialBPA = credits.disableBasicPersonal ? 0 : (PROVINCIAL_BPA[province] || 0);
   const lowestProvRate = provincialBrackets[0].rate;
+  
   const provincialCreditsAmount = 
+    provincialBPA * lowestProvRate +
     (credits.medicalExpenses || 0) * lowestProvRate +
     (credits.donations || 0) * lowestProvRate +
     (credits.tuition || 0) * lowestProvRate;
@@ -236,7 +279,7 @@ export function calculateTax({
   }
 
   const totalTax = federalTax + provincialTax;
-  const netIncome = totalIncome - totalTax;
+  const netIncome = totalIncome - totalTax - cppContribution - eiPremium;
   const effectiveRate = totalIncome > 0 ? (totalTax / totalIncome) * 100 : 0;
   
   const federalMarginal = getMarginalRate(taxableIncome, FEDERAL_BRACKETS);
@@ -250,6 +293,8 @@ export function calculateTax({
     federalTax,
     provincialTax,
     totalTax,
+    cppContribution,
+    eiPremium,
     netIncome,
     effectiveRate,
     marginalRate,
