@@ -161,10 +161,7 @@ export default function TaxCalculatorPage() {
           <div className="lg:sticky lg:top-24 lg:self-start">
             <AnimatePresence mode="wait">
               {results && results.totalIncome > 0 ? (
-                <>
-                  <TaxBreakdown results={results} />
-                  <CalculationBreakdown results={results} province={data.province} income={data.income} />
-                </>
+                <TaxBreakdown results={results} />
               ) : (
                 <motion.div
                   initial={{ opacity: 0 }}
