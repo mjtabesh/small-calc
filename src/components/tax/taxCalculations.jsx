@@ -226,16 +226,14 @@ export function calculateTax({
     ? Math.min(employmentIncome * eiRate, EI_MAX_INSURABLE * eiRate)
     : 0;
 
-  // Calculate total deductions (including CPP and EI)
+  // Calculate total deductions (NOT including CPP and EI - those are credits)
   const totalDeductions = 
     (deductions.rrsp || 0) +
     (deductions.unionDues || 0) +
     (deductions.childcare || 0) +
     (deductions.movingExpenses || 0) +
     (deductions.supportPayments || 0) +
-    (deductions.other || 0) +
-    cppContribution +
-    eiPremium;
+    (deductions.other || 0);
 
   // Calculate taxable income
   const taxableIncome = Math.max(0, totalIncome - totalDeductions);
