@@ -37,7 +37,105 @@ export default function TaxBreakdown({ results }) {
       transition={{ duration: 0.4 }}
       className="space-y-6"
     >
-      {/* Main Result Card */}
+      {/* Income Summary */}
+      <div className="bg-white rounded-xl border border-slate-100 divide-y divide-slate-100">
+        <div className="p-4 flex items-center justify-between">
+          <span className="text-sm text-slate-600">Total Income</span>
+          <span className="text-lg font-semibold text-slate-900">{formatCurrency(totalIncome)}</span>
+        </div>
+        <div className="p-4 flex items-center justify-between">
+          <span className="text-sm text-slate-600">Taxable Income</span>
+          <span className="text-lg font-semibold text-slate-900">{formatCurrency(taxableIncome)}</span>
+        </div>
+      </div>
+
+      {/* Tax & Deductions Breakdown */}
+      <div className="space-y-3">
+        <h4 className="text-sm font-semibold text-slate-700 px-1">Deductions</h4>
+        
+        <div className="grid grid-cols-2 gap-3">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <Building2 className="h-4 w-4 text-blue-600" />
+              <span className="text-xs font-medium text-slate-500">Federal Tax</span>
+            </div>
+            <div className="text-xl font-semibold text-slate-900">
+              {formatCurrency(federalTax)}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.15 }}
+            className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin className="h-4 w-4 text-teal-600" />
+              <span className="text-xs font-medium text-slate-500">{provinceName} Tax</span>
+            </div>
+            <div className="text-xl font-semibold text-slate-900">
+              {formatCurrency(provincialTax)}
+            </div>
+          </motion.div>
+
+          {cppContribution > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <PiggyBank className="h-4 w-4 text-purple-600" />
+                <span className="text-xs font-medium text-slate-500">CPP Contribution</span>
+              </div>
+              <div className="text-xl font-semibold text-slate-900">
+                {formatCurrency(cppContribution)}
+              </div>
+            </motion.div>
+          )}
+
+          {eiPremium > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.25 }}
+              className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Receipt className="h-4 w-4 text-indigo-600" />
+                <span className="text-xs font-medium text-slate-500">EI Premium</span>
+              </div>
+              <div className="text-xl font-semibold text-slate-900">
+                {formatCurrency(eiPremium)}
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* Total Tax */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3 }}
+        className="bg-red-50 rounded-xl p-4 border border-red-100"
+      >
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-red-800">Total Tax & Deductions</span>
+          <div className="text-2xl font-bold text-red-700">
+            {formatCurrency(totalTax + cppContribution + eiPremium)}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Net Income */}
       <div className="bg-gradient-to-br from-[#1e3a5f] to-[#0f2744] rounded-2xl p-6 text-white">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-white/10 rounded-lg">
@@ -49,99 +147,9 @@ export default function TaxBreakdown({ results }) {
           {formatCurrency(netIncome)}
         </div>
         <div className="text-white/60 text-sm">
-          After all taxes • {formatCurrency(netIncome / 12)}/month
+          After all deductions • {formatCurrency(netIncome / 12)}/month
         </div>
       </div>
-
-      {/* Tax Summary Grid */}
-      <div className="grid grid-cols-2 gap-3">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm"
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <Building2 className="h-4 w-4 text-blue-600" />
-            <span className="text-xs font-medium text-slate-500">Federal Tax</span>
-          </div>
-          <div className="text-xl font-semibold text-slate-900">
-            {formatCurrency(federalTax)}
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.15 }}
-          className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm"
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <MapPin className="h-4 w-4 text-teal-600" />
-            <span className="text-xs font-medium text-slate-500">{provinceName} Tax</span>
-          </div>
-          <div className="text-xl font-semibold text-slate-900">
-            {formatCurrency(provincialTax)}
-          </div>
-        </motion.div>
-
-        {cppContribution > 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <PiggyBank className="h-4 w-4 text-purple-600" />
-              <span className="text-xs font-medium text-slate-500">CPP Contribution</span>
-            </div>
-            <div className="text-xl font-semibold text-slate-900">
-              {formatCurrency(cppContribution)}
-            </div>
-          </motion.div>
-        )}
-
-        {eiPremium > 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.25 }}
-            className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <Receipt className="h-4 w-4 text-indigo-600" />
-              <span className="text-xs font-medium text-slate-500">EI Premium</span>
-            </div>
-            <div className="text-xl font-semibold text-slate-900">
-              {formatCurrency(eiPremium)}
-            </div>
-          </motion.div>
-        )}
-      </div>
-
-      {/* Total Deductions */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3 }}
-        className="bg-red-50 rounded-xl p-4 border border-red-100"
-      >
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Receipt className="h-4 w-4 text-red-600" />
-              <span className="text-sm font-medium text-red-800">Total Deductions</span>
-            </div>
-            <div className="text-xl font-bold text-red-700">
-              {formatCurrency(totalTax + cppContribution + eiPremium)}
-            </div>
-          </div>
-          <div className="text-xs text-red-600 pl-6">
-            Tax: {formatCurrency(totalTax)} • CPP: {formatCurrency(cppContribution)} • EI: {formatCurrency(eiPremium)}
-          </div>
-        </div>
-      </motion.div>
 
       {/* Tax Rates */}
       <div className="bg-slate-50 rounded-xl p-5 space-y-4">
@@ -188,24 +196,6 @@ export default function TaxBreakdown({ results }) {
         </p>
       </div>
 
-      {/* Income Summary */}
-      <div className="bg-white rounded-xl border border-slate-100 divide-y divide-slate-100">
-        <div className="p-4 flex items-center justify-between">
-          <span className="text-sm text-slate-600">Total Income</span>
-          <span className="text-sm font-medium text-slate-900">{formatCurrency(totalIncome)}</span>
-        </div>
-        <div className="p-4 flex items-center justify-between">
-          <span className="text-sm text-slate-600">Taxable Income</span>
-          <span className="text-sm font-medium text-slate-900">{formatCurrency(taxableIncome)}</span>
-        </div>
-        <div className="p-4 flex items-center justify-between bg-green-50">
-          <div className="flex items-center gap-2">
-            <PiggyBank className="h-4 w-4 text-green-600" />
-            <span className="text-sm font-medium text-green-800">Net Income</span>
-          </div>
-          <span className="text-sm font-bold text-green-700">{formatCurrency(netIncome)}</span>
-        </div>
-      </div>
     </motion.div>
   );
 }
