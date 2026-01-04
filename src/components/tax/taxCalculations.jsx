@@ -309,6 +309,11 @@ export function calculateTax({
     netIncome,
     effectiveRate,
     marginalRate,
-    provinceName: PROVINCE_NAMES[province] || province
+    provinceName: PROVINCE_NAMES[province] || province,
+    credits: {
+      federal: federalCreditsAmount,
+      provincial: provincialCreditsAmount,
+      total: federalCreditsAmount + provincialCreditsAmount
+    }
   };
 }
