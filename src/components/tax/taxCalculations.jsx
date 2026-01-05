@@ -256,6 +256,16 @@ export function calculateTax({
   // CPP and EI contribution credits
   const cppEiCreditsAmount = cppContribution + eiPremium;
 
+  // Calculate federal donation credit (tiered rates)
+  let federalDonationCredit = 0;
+  if (credits.donations) {
+    const first200 = Math.min(credits.donations, 200);
+    const over200 = Math.max(0, credits.donations - 200);
+    // Determine if high income bracket applies (over $177,882 for 33% rate)
+    const highIncomeRate = taxableIncome > 177882 ? 0.33 : 0.29;
+    federalDonationCredit = (first200 * 0.145) + (over200 * highIncomeRate);
+  }
+
   // Build federal credit items
   const federalCreditItems = [];
   if (federalBPA > 0) federalCreditItems.push({ label: 'Basic Personal Amount', amount: federalBPA * 0.145 });
@@ -263,13 +273,13 @@ export function calculateTax({
   if (cppContribution > 0) federalCreditItems.push({ label: 'CPP Contribution Credit', amount: cppContribution * 0.145 });
   if (eiPremium > 0) federalCreditItems.push({ label: 'EI Premium Credit', amount: eiPremium * 0.145 });
   if (credits.medicalExpenses) federalCreditItems.push({ label: 'Medical Expenses', amount: credits.medicalExpenses * 0.145 });
-  if (credits.donations) federalCreditItems.push({ label: 'Charitable Donations', amount: credits.donations * 0.145 });
+  if (credits.donations) federalCreditItems.push({ label: 'Charitable Donations', amount: federalDonationCredit });
   if (credits.tuition) federalCreditItems.push({ label: 'Tuition', amount: credits.tuition * 0.145 });
   if (credits.disability) federalCreditItems.push({ label: 'Disability Tax Credit', amount: 9428 * 0.145 });
   if (credits.age65Plus) federalCreditItems.push({ label: 'Age 65+ Credit', amount: 8790 * 0.145 });
   if (credits.spouseAmount) federalCreditItems.push({ label: 'Spouse/Partner Amount', amount: credits.spouseAmount * 0.145 });
 
-  // Total federal credits at 14.5% (2025 rate)
+  // Total federal credits
   const federalCreditsAmount = federalCreditItems.reduce((sum, item) => sum + item.amount, 0);
 
   federalTax = Math.max(0, federalTax - federalCreditsAmount);
@@ -282,12 +292,22 @@ export function calculateTax({
   const provincialBPA = credits.disableBasicPersonal ? 0 : (PROVINCIAL_BPA[province] || 0);
   const lowestProvRate = provincialBrackets[0].rate;
   
+  // Calculate provincial donation credit (tiered rates)
+  let provincialDonationCredit = 0;
+  if (credits.donations) {
+    const first200 = Math.min(credits.donations, 200);
+    const over200 = Math.max(0, credits.donations - 200);
+    // Use highest provincial rate for amounts over $200
+    const highProvRate = provincialBrackets[provincialBrackets.length - 1].rate;
+    provincialDonationCredit = (first200 * lowestProvRate) + (over200 * highProvRate);
+  }
+  
   // Build provincial credit items
   const provincialCreditItems = [];
-  if (provincialBPA > 0) provincialCreditItems.push({ label: 'Provincial Basic Personal Amount', amount: provincialBPA * lowestProvRate });
-  if (credits.medicalExpenses) provincialCreditItems.push({ label: 'Provincial Medical Expenses', amount: credits.medicalExpenses * lowestProvRate });
-  if (credits.donations) provincialCreditItems.push({ label: 'Provincial Donations', amount: credits.donations * lowestProvRate });
-  if (credits.tuition) provincialCreditItems.push({ label: 'Provincial Tuition', amount: credits.tuition * lowestProvRate });
+  if (provincialBPA > 0) provincialCreditItems.push({ label: 'Basic Personal Amount', amount: provincialBPA * lowestProvRate });
+  if (credits.medicalExpenses) provincialCreditItems.push({ label: 'Medical Expenses', amount: credits.medicalExpenses * lowestProvRate });
+  if (credits.donations) provincialCreditItems.push({ label: 'Charitable Donations', amount: provincialDonationCredit });
+  if (credits.tuition) provincialCreditItems.push({ label: 'Tuition', amount: credits.tuition * lowestProvRate });
   
   const provincialCreditsAmount = provincialCreditItems.reduce((sum, item) => sum + item.amount, 0);
 

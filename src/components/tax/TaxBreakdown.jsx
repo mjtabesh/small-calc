@@ -113,18 +113,37 @@ export default function TaxBreakdown({ results }) {
               <div className="px-4 py-2 bg-green-100">
                 <span className="text-xs font-semibold text-green-800 uppercase tracking-wider">Tax Credits</span>
               </div>
-              {credits.federalItems?.map((item, idx) => (
-                <div key={`fed-${idx}`} className="p-4 flex items-center justify-between pl-8">
-                  <span className="text-sm text-slate-700">{item.label}</span>
-                  <span className="text-base font-medium text-green-700">-{formatCurrency(item.amount)}</span>
-                </div>
-              ))}
-              {credits.provincialItems?.map((item, idx) => (
-                <div key={`prov-${idx}`} className="p-4 flex items-center justify-between pl-8">
-                  <span className="text-sm text-slate-700">{item.label}</span>
-                  <span className="text-base font-medium text-green-700">-{formatCurrency(item.amount)}</span>
-                </div>
-              ))}
+              
+              {/* Federal Credits */}
+              {credits.federalItems?.length > 0 && (
+                <>
+                  <div className="px-6 py-2 bg-green-50">
+                    <span className="text-xs font-semibold text-green-700 uppercase tracking-wider">Federal</span>
+                  </div>
+                  {credits.federalItems.map((item, idx) => (
+                    <div key={`fed-${idx}`} className="p-4 flex items-center justify-between pl-10">
+                      <span className="text-sm text-slate-700">{item.label}</span>
+                      <span className="text-base font-medium text-green-700">-{formatCurrency(item.amount)}</span>
+                    </div>
+                  ))}
+                </>
+              )}
+              
+              {/* Provincial Credits */}
+              {credits.provincialItems?.length > 0 && (
+                <>
+                  <div className="px-6 py-2 bg-green-50">
+                    <span className="text-xs font-semibold text-green-700 uppercase tracking-wider">{provinceName}</span>
+                  </div>
+                  {credits.provincialItems.map((item, idx) => (
+                    <div key={`prov-${idx}`} className="p-4 flex items-center justify-between pl-10">
+                      <span className="text-sm text-slate-700">{item.label}</span>
+                      <span className="text-base font-medium text-green-700">-{formatCurrency(item.amount)}</span>
+                    </div>
+                  ))}
+                </>
+              )}
+              
               <div className="p-4 flex items-center justify-between bg-green-50">
                 <span className="text-sm font-semibold text-green-800">Total Tax Credits</span>
                 <span className="text-lg font-semibold text-green-700">-{formatCurrency(credits.total)}</span>
