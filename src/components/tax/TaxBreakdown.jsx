@@ -113,7 +113,7 @@ export default function TaxBreakdown({ results }) {
               <div className="px-4 py-2 bg-green-100">
                 <span className="text-xs font-semibold text-green-800 uppercase tracking-wider">Tax Credits</span>
               </div>
-              
+
               {/* Federal Credits */}
               {credits.federalItems?.length > 0 && (
                 <>
@@ -128,7 +128,7 @@ export default function TaxBreakdown({ results }) {
                   ))}
                 </>
               )}
-              
+
               {/* Provincial Credits */}
               {credits.provincialItems?.length > 0 && (
                 <>
@@ -143,7 +143,7 @@ export default function TaxBreakdown({ results }) {
                   ))}
                 </>
               )}
-              
+
               <div className="p-4 flex items-center justify-between bg-green-50">
                 <span className="text-sm font-semibold text-green-800">Total Tax Credits</span>
                 <span className="text-lg font-semibold text-green-700">-{formatCurrency(credits.total)}</span>
