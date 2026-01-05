@@ -12,7 +12,6 @@ const PROVINCES = [
   { code: "NU", name: "Nunavut" },
   { code: "ON", name: "Ontario" },
   { code: "PE", name: "Prince Edward Island" },
-  { code: "QC", name: "Quebec" },
   { code: "SK", name: "Saskatchewan" },
   { code: "YT", name: "Yukon" }
 ];
