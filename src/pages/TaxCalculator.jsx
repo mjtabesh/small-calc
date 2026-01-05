@@ -147,7 +147,7 @@ export default function TaxCalculatorPage() {
                     <div>
                       <p className="text-white/70 text-sm">Your Take-Home Pay</p>
                       <p className="text-2xl font-bold">
-                        ${results.netIncome.toLocaleString('en-CA', { minimumFractionDigits: 2 })}
+                        ${results.takeHome.toLocaleString('en-CA', { minimumFractionDigits: 2 })}
                       </p>
                     </div>
                     <ChevronRight className="h-5 w-5 text-white/50" />
