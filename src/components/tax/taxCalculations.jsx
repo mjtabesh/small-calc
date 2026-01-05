@@ -229,13 +229,15 @@ export function calculateTax({
     : 0;
 
   // Calculate total deductions (NOT including CPP and EI - those are credits)
-  const totalDeductions = 
-    (deductions.rrsp || 0) +
-    (deductions.unionDues || 0) +
-    (deductions.childcare || 0) +
-    (deductions.movingExpenses || 0) +
-    (deductions.supportPayments || 0) +
-    (deductions.other || 0);
+  const deductionItems = [];
+  if (deductions.rrsp) deductionItems.push({ label: 'RRSP Contributions', amount: deductions.rrsp });
+  if (deductions.unionDues) deductionItems.push({ label: 'Union/Professional Dues', amount: deductions.unionDues });
+  if (deductions.childcare) deductionItems.push({ label: 'Childcare Expenses', amount: deductions.childcare });
+  if (deductions.movingExpenses) deductionItems.push({ label: 'Moving Expenses', amount: deductions.movingExpenses });
+  if (deductions.supportPayments) deductionItems.push({ label: 'Support Payments', amount: deductions.supportPayments });
+  if (deductions.other) deductionItems.push({ label: 'Other Deductions', amount: deductions.other });
+  
+  const totalDeductions = deductionItems.reduce((sum, item) => sum + item.amount, 0);
 
   // Calculate taxable income
   const taxableIncome = Math.max(0, totalIncome - totalDeductions);
@@ -254,17 +256,21 @@ export function calculateTax({
   // CPP and EI contribution credits
   const cppEiCreditsAmount = cppContribution + eiPremium;
 
+  // Build federal credit items
+  const federalCreditItems = [];
+  if (federalBPA > 0) federalCreditItems.push({ label: 'Basic Personal Amount', amount: federalBPA * 0.145 });
+  if (canadaEmploymentAmount > 0) federalCreditItems.push({ label: 'Canada Employment Amount', amount: canadaEmploymentAmount * 0.145 });
+  if (cppContribution > 0) federalCreditItems.push({ label: 'CPP Contribution Credit', amount: cppContribution * 0.145 });
+  if (eiPremium > 0) federalCreditItems.push({ label: 'EI Premium Credit', amount: eiPremium * 0.145 });
+  if (credits.medicalExpenses) federalCreditItems.push({ label: 'Medical Expenses', amount: credits.medicalExpenses * 0.145 });
+  if (credits.donations) federalCreditItems.push({ label: 'Charitable Donations', amount: credits.donations * 0.145 });
+  if (credits.tuition) federalCreditItems.push({ label: 'Tuition', amount: credits.tuition * 0.145 });
+  if (credits.disability) federalCreditItems.push({ label: 'Disability Tax Credit', amount: 9428 * 0.145 });
+  if (credits.age65Plus) federalCreditItems.push({ label: 'Age 65+ Credit', amount: 8790 * 0.145 });
+  if (credits.spouseAmount) federalCreditItems.push({ label: 'Spouse/Partner Amount', amount: credits.spouseAmount * 0.145 });
+
   // Total federal credits at 14.5% (2025 rate)
-  const federalCreditsAmount = 
-    federalBPA * 0.145 +
-    canadaEmploymentAmount * 0.145 +
-    cppEiCreditsAmount * 0.145 +
-    (credits.medicalExpenses || 0) * 0.145 +
-    (credits.donations || 0) * 0.145 +
-    (credits.tuition || 0) * 0.145 +
-    (credits.disability ? 9428 * 0.145 : 0) +
-    (credits.age65Plus ? 8790 * 0.145 : 0) +
-    (credits.spouseAmount || 0) * 0.145;
+  const federalCreditsAmount = federalCreditItems.reduce((sum, item) => sum + item.amount, 0);
 
   federalTax = Math.max(0, federalTax - federalCreditsAmount);
 
@@ -276,11 +282,14 @@ export function calculateTax({
   const provincialBPA = credits.disableBasicPersonal ? 0 : (PROVINCIAL_BPA[province] || 0);
   const lowestProvRate = provincialBrackets[0].rate;
   
-  const provincialCreditsAmount = 
-    provincialBPA * lowestProvRate +
-    (credits.medicalExpenses || 0) * lowestProvRate +
-    (credits.donations || 0) * lowestProvRate +
-    (credits.tuition || 0) * lowestProvRate;
+  // Build provincial credit items
+  const provincialCreditItems = [];
+  if (provincialBPA > 0) provincialCreditItems.push({ label: 'Provincial Basic Personal Amount', amount: provincialBPA * lowestProvRate });
+  if (credits.medicalExpenses) provincialCreditItems.push({ label: 'Provincial Medical Expenses', amount: credits.medicalExpenses * lowestProvRate });
+  if (credits.donations) provincialCreditItems.push({ label: 'Provincial Donations', amount: credits.donations * lowestProvRate });
+  if (credits.tuition) provincialCreditItems.push({ label: 'Provincial Tuition', amount: credits.tuition * lowestProvRate });
+  
+  const provincialCreditsAmount = provincialCreditItems.reduce((sum, item) => sum + item.amount, 0);
 
   provincialTax = Math.max(0, provincialTax - provincialCreditsAmount);
 
@@ -300,6 +309,7 @@ export function calculateTax({
   return {
     totalIncome,
     totalDeductions,
+    deductionItems,
     taxableIncome,
     federalTax,
     provincialTax,
@@ -313,7 +323,9 @@ export function calculateTax({
     credits: {
       federal: federalCreditsAmount,
       provincial: provincialCreditsAmount,
-      total: federalCreditsAmount + provincialCreditsAmount
+      total: federalCreditsAmount + provincialCreditsAmount,
+      federalItems: federalCreditItems,
+      provincialItems: provincialCreditItems
     }
   };
 }
