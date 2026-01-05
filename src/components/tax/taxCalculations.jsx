@@ -266,13 +266,23 @@ export function calculateTax({
     federalDonationCredit = (first200 * 0.145) + (over200 * highIncomeRate);
   }
 
+  // Calculate medical expenses credit (with threshold)
+  const MEDICAL_THRESHOLD_FIXED = 2834; // 2025 amount
+  let federalMedicalCredit = 0;
+  let claimableMedicalExpenses = 0;
+  if (credits.medicalExpenses) {
+    const medicalThreshold = Math.min(totalIncome * 0.03, MEDICAL_THRESHOLD_FIXED);
+    claimableMedicalExpenses = Math.max(0, credits.medicalExpenses - medicalThreshold);
+    federalMedicalCredit = claimableMedicalExpenses * 0.145;
+  }
+
   // Build federal credit items
   const federalCreditItems = [];
   if (federalBPA > 0) federalCreditItems.push({ label: 'Basic Personal Amount', amount: federalBPA * 0.145 });
   if (canadaEmploymentAmount > 0) federalCreditItems.push({ label: 'Canada Employment Amount', amount: canadaEmploymentAmount * 0.145 });
   if (cppContribution > 0) federalCreditItems.push({ label: 'CPP Contribution Credit', amount: cppContribution * 0.145 });
   if (eiPremium > 0) federalCreditItems.push({ label: 'EI Premium Credit', amount: eiPremium * 0.145 });
-  if (credits.medicalExpenses) federalCreditItems.push({ label: 'Medical Expenses', amount: credits.medicalExpenses * 0.145 });
+  if (federalMedicalCredit > 0) federalCreditItems.push({ label: 'Medical Expenses', amount: federalMedicalCredit });
   if (credits.donations) federalCreditItems.push({ label: 'Charitable Donations', amount: federalDonationCredit });
   if (credits.tuition) federalCreditItems.push({ label: 'Tuition', amount: credits.tuition * 0.145 });
   if (credits.disability) federalCreditItems.push({ label: 'Disability Tax Credit', amount: 9428 * 0.145 });
@@ -302,10 +312,13 @@ export function calculateTax({
     provincialDonationCredit = (first200 * lowestProvRate) + (over200 * highProvRate);
   }
   
+  // Calculate provincial medical expenses credit (using same claimable amount)
+  const provincialMedicalCredit = claimableMedicalExpenses > 0 ? claimableMedicalExpenses * lowestProvRate : 0;
+
   // Build provincial credit items
   const provincialCreditItems = [];
   if (provincialBPA > 0) provincialCreditItems.push({ label: 'Basic Personal Amount', amount: provincialBPA * lowestProvRate });
-  if (credits.medicalExpenses) provincialCreditItems.push({ label: 'Medical Expenses', amount: credits.medicalExpenses * lowestProvRate });
+  if (provincialMedicalCredit > 0) provincialCreditItems.push({ label: 'Medical Expenses', amount: provincialMedicalCredit });
   if (credits.donations) provincialCreditItems.push({ label: 'Charitable Donations', amount: provincialDonationCredit });
   if (credits.tuition) provincialCreditItems.push({ label: 'Tuition', amount: credits.tuition * lowestProvRate });
   
