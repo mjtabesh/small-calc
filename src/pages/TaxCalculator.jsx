@@ -77,39 +77,53 @@ export default function TaxCalculatorPage() {
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Calculator Section */}
           <div className="space-y-6">
-            {/* Mode Toggle */}
+            {/* Mode Selector */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg transition-colors ${
-                    isAdvanced ? 'bg-purple-100' : 'bg-teal-100'
-                  }`}>
-                    {isAdvanced ? (
-                      <Sparkles className="h-4 w-4 text-purple-600" />
-                    ) : (
-                      <Calculator className="h-4 w-4 text-teal-600" />
-                    )}
-                  </div>
-                  <div>
-                    <Label className="text-sm font-semibold text-slate-800">
-                      {isAdvanced ? 'Advanced Mode' : 'Simple Mode'}
-                    </Label>
-                    <p className="text-xs text-slate-500">
-                      {isAdvanced 
-                        ? 'Full income, deductions & credits' 
-                        : 'Quick employment income estimate'}
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold text-slate-700">Choose Calculator Mode</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => handleModeChange(false)}
+                    className={`p-4 rounded-xl border-2 transition-all text-left ${
+                      !isAdvanced
+                        ? 'border-teal-500 bg-teal-50 shadow-sm'
+                        : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Calculator className={`h-4 w-4 ${!isAdvanced ? 'text-teal-600' : 'text-slate-400'}`} />
+                      <span className={`font-semibold text-sm ${!isAdvanced ? 'text-teal-900' : 'text-slate-700'}`}>
+                        Simple
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600">
+                      Quick estimate for employment income only
                     </p>
-                  </div>
+                  </button>
+
+                  <button
+                    onClick={() => handleModeChange(true)}
+                    className={`p-4 rounded-xl border-2 transition-all text-left ${
+                      isAdvanced
+                        ? 'border-purple-500 bg-purple-50 shadow-sm'
+                        : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className={`h-4 w-4 ${isAdvanced ? 'text-purple-600' : 'text-slate-400'}`} />
+                      <span className={`font-semibold text-sm ${isAdvanced ? 'text-purple-900' : 'text-slate-700'}`}>
+                        Detailed
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600">
+                      Include all income, deductions & tax savings
+                    </p>
+                  </button>
                 </div>
-                <Switch
-                  checked={isAdvanced}
-                  onCheckedChange={handleModeChange}
-                  className="data-[state=checked]:bg-purple-600"
-                />
               </div>
             </motion.div>
 
