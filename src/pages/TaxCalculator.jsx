@@ -50,21 +50,20 @@ export default function TaxCalculatorPage() {
       {/* Page Header */}
       <div className="bg-white border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gradient-to-br from-[#1e3a5f] to-[#0f2744] rounded-xl shadow-lg">
-                <Calculator className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900">Canada Tax Calculator</h1>
-                <p className="text-sm text-slate-500">2025 Tax Year Estimate</p>
-              </div>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
+                2025 Canadian Income Tax Calculator
+              </h1>
+              <p className="text-base md:text-lg text-slate-600 leading-relaxed">
+                Calculate your federal and provincial income tax, CPP, and EI contributions with detailed breakdowns for all Canadian provinces and territories.
+              </p>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleReset}
-              className="text-slate-500 hover:text-slate-700"
+              className="text-slate-500 hover:text-slate-700 flex-shrink-0"
             >
               <RotateCcw className="h-4 w-4 mr-1" />
               Reset
