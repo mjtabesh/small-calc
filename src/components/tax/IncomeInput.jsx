@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DollarSign } from "lucide-react";
-import { NumericFormat } from 'react-number-format';
+import { NumericFormat } from "react-number-format";
 
 export default function IncomeInput({
   label,
