@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Switch } from "@/components/ui/switch";
+
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calculator, Sparkles, RotateCcw, ChevronRight } from "lucide-react";
@@ -77,39 +77,76 @@ export default function TaxCalculatorPage() {
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Calculator Section */}
           <div className="space-y-6">
-            {/* Mode Toggle */}
+            {/* Mode Selector */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg transition-colors ${
-                    isAdvanced ? 'bg-purple-100' : 'bg-teal-100'
-                  }`}>
-                    {isAdvanced ? (
-                      <Sparkles className="h-4 w-4 text-purple-600" />
-                    ) : (
-                      <Calculator className="h-4 w-4 text-teal-600" />
-                    )}
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => handleModeChange(false)}
+                  className={`relative p-4 rounded-xl border-2 transition-all text-left ${
+                    !isAdvanced
+                      ? 'border-teal-500 bg-teal-50'
+                      : 'border-slate-200 bg-white hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`p-2 rounded-lg ${
+                      !isAdvanced ? 'bg-teal-100' : 'bg-slate-100'
+                    }`}>
+                      <Calculator className={`h-4 w-4 ${
+                        !isAdvanced ? 'text-teal-600' : 'text-slate-400'
+                      }`} />
+                    </div>
+                    <div>
+                      <div className={`text-sm font-semibold mb-1 ${
+                        !isAdvanced ? 'text-teal-900' : 'text-slate-700'
+                      }`}>
+                        Simple
+                      </div>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        Quick estimate for employment income only
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <Label className="text-sm font-semibold text-slate-800">
-                      {isAdvanced ? 'Advanced Mode' : 'Simple Mode'}
-                    </Label>
-                    <p className="text-xs text-slate-500">
-                      {isAdvanced 
-                        ? 'Full income, deductions & credits' 
-                        : 'Quick employment income estimate'}
-                    </p>
+                  {!isAdvanced && (
+                    <div className="absolute top-3 right-3 w-2 h-2 bg-teal-500 rounded-full" />
+                  )}
+                </button>
+
+                <button
+                  onClick={() => handleModeChange(true)}
+                  className={`relative p-4 rounded-xl border-2 transition-all text-left ${
+                    isAdvanced
+                      ? 'border-purple-500 bg-purple-50'
+                      : 'border-slate-200 bg-white hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`p-2 rounded-lg ${
+                      isAdvanced ? 'bg-purple-100' : 'bg-slate-100'
+                    }`}>
+                      <Sparkles className={`h-4 w-4 ${
+                        isAdvanced ? 'text-purple-600' : 'text-slate-400'
+                      }`} />
+                    </div>
+                    <div>
+                      <div className={`text-sm font-semibold mb-1 ${
+                        isAdvanced ? 'text-purple-900' : 'text-slate-700'
+                      }`}>
+                        Advanced
+                      </div>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        All income sources, deductions & tax credits
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <Switch
-                  checked={isAdvanced}
-                  onCheckedChange={handleModeChange}
-                  className="data-[state=checked]:bg-purple-600"
-                />
+                  {isAdvanced && (
+                    <div className="absolute top-3 right-3 w-2 h-2 bg-purple-500 rounded-full" />
+                  )}
+                </button>
               </div>
             </motion.div>
 
