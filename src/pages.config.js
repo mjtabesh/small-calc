@@ -1,11 +1,11 @@
-import Home from './pages/Home';
 import TaxCalculator from './pages/TaxCalculator';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
     "TaxCalculator": TaxCalculator,
+    "Home": Home,
 }
 
 export const pagesConfig = {
