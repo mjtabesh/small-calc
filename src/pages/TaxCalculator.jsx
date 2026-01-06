@@ -7,6 +7,7 @@ import { Calculator, Sparkles, RotateCcw, ChevronRight } from "lucide-react";
 import SimpleCalculator from "@/components/tax/SimpleCalculator";
 import AdvancedCalculator from "@/components/tax/AdvancedCalculator";
 import TaxBreakdown from "@/components/tax/TaxBreakdown";
+import TaxGuide from "@/components/tax/TaxGuide";
 import { calculateTax } from "@/components/tax/taxCalculations";
 
 const DEFAULT_DATA = {
@@ -225,8 +226,13 @@ export default function TaxCalculatorPage() {
               </p>
             </motion.div>
           </div>
-        </div>
-      </main>
-    </div>);
+          </div>
+          </main>
+
+          {/* Comprehensive Tax Guide */}
+          <section className="border-t border-slate-200 bg-white">
+          <TaxGuide province={data.province} />
+          </section>
+          </div>);
 
 }
