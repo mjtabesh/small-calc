@@ -47,17 +47,17 @@ export default function TaxCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
-      {/* Header */}
-      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-slate-100">
-        <div className="max-w-6xl mx-auto px-4 py-4">
+      {/* Page Header */}
+      <div className="bg-white border-b border-slate-100">
+        <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-[#1e3a5f] to-[#0f2744] rounded-xl shadow-lg">
-                <Calculator className="h-5 w-5 text-white" />
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-br from-[#1e3a5f] to-[#0f2744] rounded-xl shadow-lg">
+                <Calculator className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-slate-900">Canada Tax Calculator</h1>
-                <p className="text-xs text-slate-500">2025 Tax Year Estimate</p>
+                <h1 className="text-2xl font-bold text-slate-900">Canada Tax Calculator</h1>
+                <p className="text-sm text-slate-500">2025 Tax Year Estimate</p>
               </div>
             </div>
             <Button
@@ -71,7 +71,7 @@ export default function TaxCalculatorPage() {
             </Button>
           </div>
         </div>
-      </header>
+      </div>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-8">
@@ -235,15 +235,6 @@ export default function TaxCalculatorPage() {
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-100 mt-12 py-6">
-        <div className="max-w-6xl mx-auto px-4">
-          <p className="text-center text-xs text-slate-400">
-            © {new Date().getFullYear()} Canada Tax Calculator • 2025 Tax Year • For estimation purposes only
-          </p>
-        </div>
-      </footer>
-    </div>
+      </div>
   );
 }
