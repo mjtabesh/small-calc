@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Calculator, Sparkles, RotateCcw, ChevronRight } from "lucide-react";
+import { Calculator, Sparkles, RotateCcw, ChevronRight, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 import SimpleCalculator from "@/components/tax/SimpleCalculator";
 import AdvancedCalculator from "@/components/tax/AdvancedCalculator";
 import TaxBreakdown from "@/components/tax/TaxBreakdown";
@@ -60,15 +62,23 @@ export default function TaxCalculatorPage() {
                 <p className="text-xs text-slate-500">2025 Tax Year Estimate</p>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleReset}
-              className="text-slate-500 hover:text-slate-700"
-            >
-              <RotateCcw className="h-4 w-4 mr-1" />
-              Reset
-            </Button>
+            <div className="flex items-center gap-2">
+              <Link to={createPageUrl("TaxPlanning")}>
+                <Button variant="outline" size="sm" className="text-indigo-600 border-indigo-200 hover:bg-indigo-50">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  Tax Planning
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleReset}
+                className="text-slate-500 hover:text-slate-700"
+              >
+                <RotateCcw className="h-4 w-4 mr-1" />
+                Reset
+              </Button>
+            </div>
           </div>
         </div>
       </header>
