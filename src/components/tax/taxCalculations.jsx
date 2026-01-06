@@ -18,14 +18,14 @@ const FEDERAL_BRACKETS = [
 
 // ---------- CPP (2025) ----------
 const CPP_BASIC_EXEMPTION = 3500;
-const CPP_YMPE = 71300;          // YMPE 2025 :contentReference[oaicite:7]{index=7}
-const CPP_YAMPE = 81200;         // YAMPE 2025 (Second ceiling) :contentReference[oaicite:8]{index=8}
+const CPP_YMPE = 71300;          // YMPE 2025
+const CPP_YAMPE = 81200;         // YAMPE 2025 (Second ceiling)
 const CPP_RATE_EMPLOYEE = 0.0595;
 const CPP_MAX_EMPLOYEE = 4034.10;
 const CPP2_RATE_EMPLOYEE = 0.04;
 const CPP2_MAX_EMPLOYEE = 396.00;
 
-// Self-employed CPP: pays both halves (rates doubled) :contentReference[oaicite:9]{index=9}
+// Self-employed CPP: pays both halves (rates doubled)
 const CPP_RATE_SELFEMP = 0.119;
 const CPP_MAX_SELFEMP = 8068.20;
 const CPP2_RATE_SELFEMP = 0.08;
@@ -64,7 +64,7 @@ function getMarginalRate(income, brackets) {
 
 // ---------- Federal BPA reduction (2025) ----------
 function federalBasicPersonalAmount(netIncome) {
-  // Full BPA: 16,129; reduced to 14,538 between 177,882 and 253,414 :contentReference[oaicite:11]{index=11}
+  // Full BPA: 16,129; reduced to 14,538 between 177,882 and 253,414
   const BPA_FULL = 16129;
   const BPA_LOW = 14538;
   const START = 177882;
@@ -77,7 +77,7 @@ function federalBasicPersonalAmount(netIncome) {
   return BPA_FULL - t * (BPA_FULL - BPA_LOW);
 }
 
-// Same reduction concept applies to spouse/partner federal max amount :contentReference[oaicite:12]{index=12}
+// Same reduction concept applies to spouse/partner federal max amount
 function federalSpouseMaxAmount(netIncome) {
   // In practice this tracks federal BPA amounts for the spouse amount.
   return federalBasicPersonalAmount(netIncome);
@@ -85,7 +85,7 @@ function federalSpouseMaxAmount(netIncome) {
 
 // ---------- Ontario surtax + health premium (2025) ----------
 function ontarioSurtax(basicOntarioTaxPayable) {
-  // CRA (2025): thresholds $5,710 and $7,307; 20% then +36% :contentReference[oaicite:13]{index=13}
+  // CRA (2025): thresholds $5,710 and $7,307; 20% then +36%
   const T1 = 5710;
   const T2 = 7307;
 
@@ -99,7 +99,7 @@ function ontarioSurtax(basicOntarioTaxPayable) {
 }
 
 function ontarioHealthPremium(taxableIncome) {
-  // CRA (2024 & 2025): piecewise premium up to $900 :contentReference[oaicite:14]{index=14}
+  // CRA (2024 & 2025): piecewise premium up to $900
   const x = taxableIncome;
   if (x <= 20000) return 0;
   if (x <= 36000) return Math.min(300, 0.06 * (x - 20000));
@@ -198,7 +198,7 @@ const PROVINCIAL_BRACKETS = {
 
 // ---------- Non-refundable credit “data” (2025) from KPMG (non-QC) ----------
 const CREDIT_DATA = {
-  // KPMG: credit rate applied to credits, BPA, spouse max, disability, age + threshold, medical threshold, tuition yes/no, donation credit rates :contentReference[oaicite:15]{index=15}
+  // KPMG: credit rate applied to credits, BPA, spouse max, disability, age + threshold, medical threshold, tuition yes/no, donation credit rates
   FED: {
     creditRate: 0.145,
     // BPA handled via function (reduction at high income)
@@ -225,7 +225,7 @@ const CREDIT_DATA = {
     ageThreshold: 43169,
     medicalFixedThreshold: 2689,
     tuitionEligible: true,
-    donation: { first200Rate: 0.0506, balanceRate: 0.168, highRate: 0.205, highIncomeStart: 259829 } // :contentReference[oaicite:16]{index=16}
+    donation: { first200Rate: 0.0506, balanceRate: 0.168, highRate: 0.205, highIncomeStart: 259829 } //
   },
 
   AB: {
@@ -237,7 +237,7 @@ const CREDIT_DATA = {
     ageThreshold: 46308,
     medicalFixedThreshold: 2884,
     tuitionEligible: true,
-    donation: { first200Rate: 0.10, balanceRate: 0.21 } // KPMG table shows 10.50% SK, 10.80 MB etc; AB donation is 10%/21% :contentReference[oaicite:17]{index=17}
+    donation: { first200Rate: 0.10, balanceRate: 0.21 } // KPMG table shows 10.50% SK, 10.80 MB etc; AB donation is 10%/21%
   },
 
   SK: {
@@ -249,7 +249,7 @@ const CREDIT_DATA = {
     ageThreshold: 43066,
     medicalFixedThreshold: 2681,
     tuitionEligible: false,
-    donation: { first200Rate: 0.105, balanceRate: 0.145 } // :contentReference[oaicite:18]{index=18}
+    donation: { first200Rate: 0.105, balanceRate: 0.145 } //
   },
 
   MB: {
@@ -261,8 +261,8 @@ const CREDIT_DATA = {
     ageThreshold: 27749,
     medicalFixedThreshold: 1728,
     tuitionEligible: true,
-    donation: { first200Rate: 0.108, balanceRate: 0.174 }, // :contentReference[oaicite:19]{index=19}
-    // Manitoba BPA phaseout: 200k–400k to nil :contentReference[oaicite:20]{index=20}
+    donation: { first200Rate: 0.108, balanceRate: 0.174 }, //
+    // Manitoba BPA phaseout: 200k–400k to nil
     bpaPhaseout: { start: 200000, end: 400000 }
   },
 
@@ -275,7 +275,7 @@ const CREDIT_DATA = {
     ageThreshold: 46330,
     medicalFixedThreshold: 2885,
     tuitionEligible: false,
-    donation: { first200Rate: 0.0505, balanceRate: 0.1116 } // surtax effect handled via ON surtax calc :contentReference[oaicite:21]{index=21}
+    donation: { first200Rate: 0.0505, balanceRate: 0.1116 } // surtax effect handled via ON surtax calc
   },
 
   NB: {
@@ -287,7 +287,7 @@ const CREDIT_DATA = {
     ageThreshold: 44945,
     medicalFixedThreshold: 2798,
     tuitionEligible: true,
-    donation: { first200Rate: 0.094, balanceRate: 0.1795 } // :contentReference[oaicite:22]{index=22}
+    donation: { first200Rate: 0.094, balanceRate: 0.1795 } //
   },
 
   NS: {
@@ -299,7 +299,7 @@ const CREDIT_DATA = {
     ageThreshold: 30828,
     medicalFixedThreshold: 1637,
     tuitionEligible: true,
-    donation: { first200Rate: 0.0879, balanceRate: 0.21 } // :contentReference[oaicite:23]{index=23}
+    donation: { first200Rate: 0.0879, balanceRate: 0.21 } //
   },
 
   PE: {
@@ -311,7 +311,7 @@ const CREDIT_DATA = {
     ageThreshold: 36600,
     medicalFixedThreshold: 1678,
     tuitionEligible: true,
-    donation: { first200Rate: 0.095, balanceRate: 0.19 } // :contentReference[oaicite:24]{index=24}
+    donation: { first200Rate: 0.095, balanceRate: 0.19 } //
   },
 
   NL: {
@@ -323,7 +323,7 @@ const CREDIT_DATA = {
     ageThreshold: 38712,
     medicalFixedThreshold: 2410,
     tuitionEligible: true,
-    donation: { first200Rate: 0.087, balanceRate: 0.218 } // :contentReference[oaicite:25]{index=25}
+    donation: { first200Rate: 0.087, balanceRate: 0.218 } //
   },
 
   YT: {
@@ -334,8 +334,8 @@ const CREDIT_DATA = {
     ageAmount: 9028,
     ageThreshold: 45522,
     medicalFixedThreshold: 2834,
-    tuitionEligible: true, // Yukon provides federal employment credit; tuition generally yes per KPMG note set :contentReference[oaicite:26]{index=26}
-    donation: { first200Rate: 0.064, balanceRate: 0.15 } // :contentReference[oaicite:27]{index=27}
+    tuitionEligible: true, // Yukon provides federal employment credit; tuition generally yes per KPMG note set
+    donation: { first200Rate: 0.064, balanceRate: 0.15 } //
   },
 
   NT: {
@@ -347,7 +347,7 @@ const CREDIT_DATA = {
     ageThreshold: 45522,
     medicalFixedThreshold: 2834,
     tuitionEligible: true,
-    donation: { first200Rate: 0.059, balanceRate: 0.1405 } // :contentReference[oaicite:28]{index=28}
+    donation: { first200Rate: 0.059, balanceRate: 0.1405 } //
   },
 
   NU: {
@@ -359,11 +359,11 @@ const CREDIT_DATA = {
     ageThreshold: 45522,
     medicalFixedThreshold: 2834,
     tuitionEligible: true,
-    donation: { first200Rate: 0.04, balanceRate: 0.115 } // :contentReference[oaicite:29]{index=29}
+    donation: { first200Rate: 0.04, balanceRate: 0.115 } //
   }
 };
 
-// Manitoba BPA phaseout helper (per KPMG note) :contentReference[oaicite:30]{index=30}
+// Manitoba BPA phaseout helper (per KPMG note)
 function applyBpaPhaseout(amount, netIncome, phaseout) {
   if (!phaseout) return amount;
   const { start, end } = phaseout;
@@ -373,7 +373,7 @@ function applyBpaPhaseout(amount, netIncome, phaseout) {
   return amount * (1 - t);
 }
 
-// Federal donation credit helper: 33% applies only to extent income exceeds 253,414 :contentReference[oaicite:31]{index=31}
+// Federal donation credit helper: 33% applies only to extent income exceeds 253,414
 function federalDonationCredit(donations, netIncome) {
   if (!donations || donations <= 0) return 0;
 
@@ -405,7 +405,7 @@ function provincialDonationCredit(provCode, donations, netIncome) {
 
   const firstPart = first200 * d.first200Rate;
 
-  // Some provinces have an additional higher rate at the very top (e.g., BC) :contentReference[oaicite:32]{index=32}
+  // Some provinces have an additional higher rate at the very top (e.g., BC)
   if (d.highRate != null && d.highIncomeStart != null) {
     const highRoom = Math.max(0, netIncome - d.highIncomeStart);
     const highPortion = Math.min(over200, highRoom);
@@ -416,7 +416,40 @@ function provincialDonationCredit(provCode, donations, netIncome) {
   return firstPart + over200 * d.balanceRate;
 }
 
-// ---------- Main calculator ----------
+/**
+ * Computes federal and provincial tax (approximate) for 2025.
+ *
+ * @param {Object} params
+ * @param {string} params.province - Province code (e.g. "ON", "BC")
+ *
+ * @param {Object} [params.income] - Income sources
+ * @param {number} [params.income.employment]
+ * @param {number} [params.income.selfEmployment]
+ * @param {number} [params.income.investment]
+ * @param {number} [params.income.rental]
+ * @param {number} [params.income.rrspWithdrawal]
+ * @param {number} [params.income.pension]
+ * @param {number} [params.income.eiIncome]
+ * @param {number} [params.income.other]
+ *
+ * @param {Object} [params.deductions] - Deductions info
+ * @param {number} [params.deductions.rrsp]
+ * @param {number} [params.deductions.unionDues]
+ * @param {number} [params.deductions.childcare]
+ * @param {number} [params.deductions.movingExpenses]
+ * @param {number} [params.deductions.supportPayments]
+ * @param {number} [params.deductions.other]
+ *
+ * @param {Object} [params.credits] - Credits and other flags
+ * @param {boolean} [params.credits.disableBasicPersonal]
+ * @param {number} [params.credits.spouseNetIncome]
+ * @param {boolean} [params.credits.spouseAmount]
+ * @param {number} [params.credits.medicalExpenses]
+ * @param {number} [params.credits.donations]
+ * @param {boolean} [params.credits.age65Plus]
+ * @param {boolean} [params.credits.disability]
+ * @param {number} [params.credits.tuition]
+ */
 export function calculateTax({
   province, // non-QC
   income = {},
@@ -470,40 +503,40 @@ export function calculateTax({
     ? Math.min(Math.min(employmentIncome, EI_MAX_INSURABLE) * eiRate, eiMax)
     : 0;
 
-// ---- CPP (self-employment) — must account for CPP already covered by employment ----
-// Key idea: compute remaining CPP room (CPP1 and CPP2) after employment earnings.
-// Then apply self-employed (double) rates ONLY to that remaining room.
+  // ---- CPP (self-employment) — must account for CPP already covered by employment ----
+  // Key idea: compute remaining CPP room (CPP1 and CPP2) after employment earnings.
+  // Then apply self-employed (double) rates ONLY to that remaining room.
 
-const combinedForCpp1 = Math.min(employmentIncome + selfEmploymentIncome, CPP_YMPE);
+  const combinedForCpp1 = Math.min(employmentIncome + selfEmploymentIncome, CPP_YMPE);
 
-// CPP1 pensionable bases (basic exemption applies once across combined earnings)
-const cpp1BaseCombined = Math.max(0, combinedForCpp1 - CPP_BASIC_EXEMPTION);
+  // CPP1 pensionable bases (basic exemption applies once across combined earnings)
+  const cpp1BaseCombined = Math.max(0, combinedForCpp1 - CPP_BASIC_EXEMPTION);
 
-// Remaining CPP1 base that wasn't already pensionable through employment
-const cpp1BaseRemaining = Math.max(0, cpp1BaseCombined - cpp1BaseEmp);
+  // Remaining CPP1 base that wasn't already pensionable through employment
+  const cpp1BaseRemaining = Math.max(0, cpp1BaseCombined - cpp1BaseEmp);
 
-// Self-employed CPP1 on remaining room (both halves)
-const cpp1SE = Math.min(cpp1BaseRemaining * CPP_RATE_SELFEMP, CPP_MAX_SELFEMP);
+  // Self-employed CPP1 on remaining room (both halves)
+  const cpp1SE = Math.min(cpp1BaseRemaining * CPP_RATE_SELFEMP, CPP_MAX_SELFEMP);
 
-// CPP2 bases: above YMPE up to YAMPE (no basic exemption here)
-const combinedForCpp2 = Math.min(employmentIncome + selfEmploymentIncome, CPP_YAMPE);
+  // CPP2 bases: above YMPE up to YAMPE (no basic exemption here)
+  const combinedForCpp2 = Math.min(employmentIncome + selfEmploymentIncome, CPP_YAMPE);
 
-const cpp2BaseCombined = Math.max(0, combinedForCpp2 - CPP_YMPE);
+  const cpp2BaseCombined = Math.max(0, combinedForCpp2 - CPP_YMPE);
 
-// Remaining CPP2 base not already covered via employment
-const cpp2BaseRemaining = Math.max(0, cpp2BaseCombined - cpp2BaseEmp);
+  // Remaining CPP2 base not already covered via employment
+  const cpp2BaseRemaining = Math.max(0, cpp2BaseCombined - cpp2BaseEmp);
 
-// Self-employed CPP2 on remaining room (both halves)
-const cpp2SE = Math.min(cpp2BaseRemaining * CPP2_RATE_SELFEMP, CPP2_MAX_SELFEMP);
+  // Self-employed CPP2 on remaining room (both halves)
+  const cpp2SE = Math.min(cpp2BaseRemaining * CPP2_RATE_SELFEMP, CPP2_MAX_SELFEMP);
 
-const cppSelfEmpTotal = cpp1SE + cpp2SE;
+  const cppSelfEmpTotal = cpp1SE + cpp2SE;
 
-// Half of self-employed CPP is deductible
-const cppSelfEmpDeduction = cppSelfEmpTotal / 2;
-if (cppSelfEmpDeduction > 0) {
-  deductionItems.push({ label: "CPP (Self-employed) – deductible half", amount: cppSelfEmpDeduction });
-  totalDeductions += cppSelfEmpDeduction;
-}
+  // Half of self-employed CPP is deductible
+  const cppSelfEmpDeduction = cppSelfEmpTotal / 2;
+  if (cppSelfEmpDeduction > 0) {
+    deductionItems.push({ label: "CPP (Self-employed) – deductible half", amount: cppSelfEmpDeduction });
+    totalDeductions += cppSelfEmpDeduction;
+  }
 
 
   // ---- Taxable/net income approximation ----
@@ -518,7 +551,7 @@ if (cppSelfEmpDeduction > 0) {
 
   const fedCreditRate = CREDIT_DATA.FED.creditRate;
 
-  // BPA with high-income reduction :contentReference[oaicite:34]{index=34}
+  // BPA with high-income reduction
   const fedBpa = credits.disableBasicPersonal ? 0 : federalBasicPersonalAmount(netIncomeForCredits);
 
   // Spouse/partner amount (user supplies spouse net income)
@@ -535,7 +568,7 @@ if (cppSelfEmpDeduction > 0) {
   const cppCreditBase = cppEmpTotal + (cppSelfEmpTotal / 2);
   const eiCreditBase = eiPremium;
 
-  // Medical expenses: claimable = expenses - min(3% net income, fixed threshold) :contentReference[oaicite:35]{index=35}
+  // Medical expenses: claimable = expenses - min(3% net income, fixed threshold)
   let claimableMedical = 0;
   if (credits.medicalExpenses) {
     const fixed = CREDIT_DATA.FED.medicalFixedThreshold;
@@ -543,10 +576,10 @@ if (cppSelfEmpDeduction > 0) {
     claimableMedical = Math.max(0, credits.medicalExpenses - thresh);
   }
 
-  // Donations: corrected 33% logic :contentReference[oaicite:36]{index=36}
+  // Donations: corrected 33% logic
   const fedDonationCredit = federalDonationCredit(credits.donations || 0, netIncomeForCredits);
 
-  // Age 65+: reduced by 15% of net income over threshold :contentReference[oaicite:37]{index=37}
+  // Age 65+: reduced by 15% of net income over threshold
   let fedAgeBase = 0;
   if (credits.age65Plus) {
     const A = CREDIT_DATA.FED.ageAmount;
@@ -579,7 +612,7 @@ if (cppSelfEmpDeduction > 0) {
   const pdata = CREDIT_DATA[prov];
   const pRate = pdata.creditRate;
 
-  // Provincial BPA (with Manitoba phaseout) :contentReference[oaicite:38]{index=38}
+  // Provincial BPA (with Manitoba phaseout)
   let provBpa = credits.disableBasicPersonal ? 0 : pdata.bpa;
   provBpa = applyBpaPhaseout(provBpa, netIncomeForCredits, pdata.bpaPhaseout);
 
@@ -587,7 +620,7 @@ if (cppSelfEmpDeduction > 0) {
   const provSpouseMax = credits.spouseAmount ? pdata.spouseMax : 0;
   const provSpouseBase = credits.spouseAmount ? Math.max(0, provSpouseMax - spouseNetIncome) : 0;
 
-  // Provincial medical (same claimable amount approach, but province fixed threshold differs) :contentReference[oaicite:39]{index=39}
+  // Provincial medical (same claimable amount approach, but province fixed threshold differs)
   let provClaimableMedical = 0;
   if (credits.medicalExpenses) {
     const thresh = Math.min(netIncomeForCredits * 0.03, pdata.medicalFixedThreshold);
@@ -602,15 +635,15 @@ if (cppSelfEmpDeduction > 0) {
 
   const provDisabilityBase = credits.disability ? (pdata.disabilityAmount || 0) : 0;
 
-  // Tuition: only if eligible in that jurisdiction :contentReference[oaicite:40]{index=40}
+  // Tuition: only if eligible in that jurisdiction
   const provTuitionBase = (credits.tuition && pdata.tuitionEligible) ? credits.tuition : 0;
 
-  // Donations (province-specific) :contentReference[oaicite:41]{index=41}
+  // Donations (province-specific)
   const provDonationCredit = provincialDonationCredit(prov, credits.donations || 0, netIncomeForCredits);
 
   // CPP/EI provincial credits: most provinces apply lowest rate to base amounts.
   // Ontario’s payroll-withholding method can be more complex, but for annual tax the standard
-  // non-refundable approach is still creditBase * lowestRate (then surtax/OHP applied). :contentReference[oaicite:42]{index=42}
+  // non-refundable approach is still creditBase * lowestRate (then surtax/OHP applied).
   const provCppEiCreditValue = (cppCreditBase + eiCreditBase) * pRate;
 
   const provincialCreditItems = [];
@@ -626,7 +659,7 @@ if (cppSelfEmpDeduction > 0) {
   const provincialCreditsTotal = provincialCreditItems.reduce((s, x) => s + x.amount, 0);
 
   // Important: For Ontario, surtax depends on "basic provincial tax payable",
-  // so we must subtract credits FIRST, then compute surtax. :contentReference[oaicite:43]{index=43}
+  // so we must subtract credits FIRST, then compute surtax.
   let basicProvTaxAfterCredits = Math.max(0, provincialTax - provincialCreditsTotal);
 
   if (prov === "ON") {
