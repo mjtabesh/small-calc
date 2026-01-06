@@ -56,16 +56,16 @@ export default function TaxCalculatorPage() {
                 <Calculator className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-slate-900">Canada Tax Calculator</h1>
-                <p className="text-sm text-slate-500">2025 Tax Year Estimate</p>
+                <h1 className="text-2xl font-bold text-slate-900">2025 Canada Income Tax Calculator</h1>
+                <p className="text-sm text-slate-500">Estimate your federal and provincial income tax for 2025 using current CRA tax brackets and contribution limits.</p>
               </div>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleReset}
-              className="text-slate-500 hover:text-slate-700"
-            >
+              className="text-slate-500 hover:text-slate-700">
+
               <RotateCcw className="h-4 w-4 mr-1" />
               Reset
             </Button>
@@ -81,29 +81,29 @@ export default function TaxCalculatorPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5"
-            >
+              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => handleModeChange(false)}
                   className={`relative p-4 rounded-xl border-2 transition-all text-left ${
-                    !isAdvanced
-                      ? 'border-teal-500 bg-teal-50'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
-                  }`}
-                >
+                  !isAdvanced ?
+                  'border-teal-500 bg-teal-50' :
+                  'border-slate-200 bg-white hover:border-slate-300'}`
+                  }>
+
                   <div className="flex items-start gap-3">
                     <div className={`p-2 rounded-lg ${
-                      !isAdvanced ? 'bg-teal-100' : 'bg-slate-100'
-                    }`}>
+                    !isAdvanced ? 'bg-teal-100' : 'bg-slate-100'}`
+                    }>
                       <Calculator className={`h-4 w-4 ${
-                        !isAdvanced ? 'text-teal-600' : 'text-slate-400'
-                      }`} />
+                      !isAdvanced ? 'text-teal-600' : 'text-slate-400'}`
+                      } />
                     </div>
                     <div>
                       <div className={`text-sm font-semibold mb-1 ${
-                        !isAdvanced ? 'text-teal-900' : 'text-slate-700'
-                      }`}>
+                      !isAdvanced ? 'text-teal-900' : 'text-slate-700'}`
+                      }>
                         Simple
                       </div>
                       <p className="text-xs text-slate-500 leading-relaxed">
@@ -111,31 +111,31 @@ export default function TaxCalculatorPage() {
                       </p>
                     </div>
                   </div>
-                  {!isAdvanced && (
-                    <div className="absolute top-3 right-3 w-2 h-2 bg-teal-500 rounded-full" />
-                  )}
+                  {!isAdvanced &&
+                  <div className="absolute top-3 right-3 w-2 h-2 bg-teal-500 rounded-full" />
+                  }
                 </button>
 
                 <button
                   onClick={() => handleModeChange(true)}
                   className={`relative p-4 rounded-xl border-2 transition-all text-left ${
-                    isAdvanced
-                      ? 'border-purple-500 bg-purple-50'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
-                  }`}
-                >
+                  isAdvanced ?
+                  'border-purple-500 bg-purple-50' :
+                  'border-slate-200 bg-white hover:border-slate-300'}`
+                  }>
+
                   <div className="flex items-start gap-3">
                     <div className={`p-2 rounded-lg ${
-                      isAdvanced ? 'bg-purple-100' : 'bg-slate-100'
-                    }`}>
+                    isAdvanced ? 'bg-purple-100' : 'bg-slate-100'}`
+                    }>
                       <Sparkles className={`h-4 w-4 ${
-                        isAdvanced ? 'text-purple-600' : 'text-slate-400'
-                      }`} />
+                      isAdvanced ? 'text-purple-600' : 'text-slate-400'}`
+                      } />
                     </div>
                     <div>
                       <div className={`text-sm font-semibold mb-1 ${
-                        isAdvanced ? 'text-purple-900' : 'text-slate-700'
-                      }`}>
+                      isAdvanced ? 'text-purple-900' : 'text-slate-700'}`
+                      }>
                         Advanced
                       </div>
                       <p className="text-xs text-slate-500 leading-relaxed">
@@ -143,9 +143,9 @@ export default function TaxCalculatorPage() {
                       </p>
                     </div>
                   </div>
-                  {isAdvanced && (
-                    <div className="absolute top-3 right-3 w-2 h-2 bg-purple-500 rounded-full" />
-                  )}
+                  {isAdvanced &&
+                  <div className="absolute top-3 right-3 w-2 h-2 bg-purple-500 rounded-full" />
+                  }
                 </button>
               </div>
             </motion.div>
@@ -153,33 +153,33 @@ export default function TaxCalculatorPage() {
             {/* Calculator Form */}
             <motion.div
               layout
-              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6"
-            >
+              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+
               <AnimatePresence mode="wait">
-                {isAdvanced ? (
-                  <AdvancedCalculator
-                    key="advanced"
-                    data={data}
-                    onChange={setData}
-                  />
-                ) : (
-                  <SimpleCalculator
-                    key="simple"
-                    data={data}
-                    onChange={setData}
-                  />
-                )}
+                {isAdvanced ?
+                <AdvancedCalculator
+                  key="advanced"
+                  data={data}
+                  onChange={setData} /> :
+
+
+                <SimpleCalculator
+                  key="simple"
+                  data={data}
+                  onChange={setData} />
+
+                }
               </AnimatePresence>
             </motion.div>
 
             {/* Mobile Results CTA */}
             <div className="lg:hidden">
-              {results && results.totalIncome > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-gradient-to-br from-[#1e3a5f] to-[#0f2744] rounded-2xl p-5 text-white"
-                >
+              {results && results.totalIncome > 0 &&
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-gradient-to-br from-[#1e3a5f] to-[#0f2744] rounded-2xl p-5 text-white">
+
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-white/70 text-sm">Your Take-Home Pay</p>
@@ -190,22 +190,22 @@ export default function TaxCalculatorPage() {
                     <ChevronRight className="h-5 w-5 text-white/50" />
                   </div>
                 </motion.div>
-              )}
+              }
             </div>
           </div>
 
           {/* Results Section */}
           <div className="lg:sticky lg:top-24 lg:self-start">
             <AnimatePresence mode="wait">
-              {results && results.totalIncome > 0 ? (
-                <TaxBreakdown results={results} />
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="bg-slate-50 rounded-2xl p-8 text-center border border-slate-100"
-                >
+              {results && results.totalIncome > 0 ?
+              <TaxBreakdown results={results} /> :
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="bg-slate-50 rounded-2xl p-8 text-center border border-slate-100">
+
                   <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Calculator className="h-8 w-8 text-slate-400" />
                   </div>
@@ -216,7 +216,7 @@ export default function TaxCalculatorPage() {
                     Start by entering your income details to see your estimated tax breakdown.
                   </p>
                 </motion.div>
-              )}
+              }
             </AnimatePresence>
 
             {/* Disclaimer */}
@@ -224,8 +224,8 @@ export default function TaxCalculatorPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100"
-            >
+              className="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100">
+
               <p className="text-xs text-amber-800 leading-relaxed">
                 <strong>Disclaimer:</strong> This calculator provides estimates based on 2025 
                 tax rates and brackets. Actual taxes may vary. This is not professional tax 
@@ -235,6 +235,6 @@ export default function TaxCalculatorPage() {
           </div>
         </div>
       </main>
-      </div>
-  );
+      </div>);
+
 }
