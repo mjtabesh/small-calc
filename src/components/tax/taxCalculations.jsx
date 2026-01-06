@@ -474,11 +474,9 @@ export function calculateTax({
 // Key idea: compute remaining CPP room (CPP1 and CPP2) after employment earnings.
 // Then apply self-employed (double) rates ONLY to that remaining room.
 
-const empForCpp1 = Math.min(employmentIncome, CPP_YMPE);
 const combinedForCpp1 = Math.min(employmentIncome + selfEmploymentIncome, CPP_YMPE);
 
 // CPP1 pensionable bases (basic exemption applies once across combined earnings)
-const cpp1BaseEmp = Math.max(0, empForCpp1 - CPP_BASIC_EXEMPTION);
 const cpp1BaseCombined = Math.max(0, combinedForCpp1 - CPP_BASIC_EXEMPTION);
 
 // Remaining CPP1 base that wasn't already pensionable through employment
@@ -488,10 +486,8 @@ const cpp1BaseRemaining = Math.max(0, cpp1BaseCombined - cpp1BaseEmp);
 const cpp1SE = Math.min(cpp1BaseRemaining * CPP_RATE_SELFEMP, CPP_MAX_SELFEMP);
 
 // CPP2 bases: above YMPE up to YAMPE (no basic exemption here)
-const empForCpp2 = Math.min(employmentIncome, CPP_YAMPE);
 const combinedForCpp2 = Math.min(employmentIncome + selfEmploymentIncome, CPP_YAMPE);
 
-const cpp2BaseEmp = Math.max(0, empForCpp2 - CPP_YMPE);
 const cpp2BaseCombined = Math.max(0, combinedForCpp2 - CPP_YMPE);
 
 // Remaining CPP2 base not already covered via employment
