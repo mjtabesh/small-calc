@@ -470,21 +470,45 @@ export function calculateTax({
     ? Math.min(Math.min(employmentIncome, EI_MAX_INSURABLE) * eiRate, eiMax)
     : 0;
 
-  // ---- CPP (self-employment) — higher rate, half deductible / half credit :contentReference[oaicite:33]{index=33}
-  const cpp1BaseSE = Math.max(0, Math.min(selfEmploymentIncome, CPP_YMPE) - CPP_BASIC_EXEMPTION);
-  const cpp1SE = Math.min(cpp1BaseSE * CPP_RATE_SELFEMP, CPP_MAX_SELFEMP);
+// ---- CPP (self-employment) — must account for CPP already covered by employment ----
+// Key idea: compute remaining CPP room (CPP1 and CPP2) after employment earnings.
+// Then apply self-employed (double) rates ONLY to that remaining room.
 
-  const cpp2BaseSE = Math.max(0, Math.min(selfEmploymentIncome, CPP_YAMPE) - CPP_YMPE);
-  const cpp2SE = Math.min(cpp2BaseSE * CPP2_RATE_SELFEMP, CPP2_MAX_SELFEMP);
+const empForCpp1 = Math.min(employmentIncome, CPP_YMPE);
+const combinedForCpp1 = Math.min(employmentIncome + selfEmploymentIncome, CPP_YMPE);
 
-  const cppSelfEmpTotal = cpp1SE + cpp2SE;
+// CPP1 pensionable bases (basic exemption applies once across combined earnings)
+const cpp1BaseEmp = Math.max(0, empForCpp1 - CPP_BASIC_EXEMPTION);
+const cpp1BaseCombined = Math.max(0, combinedForCpp1 - CPP_BASIC_EXEMPTION);
 
-  // Half of self-employed CPP is deductible (added automatically)
-  const cppSelfEmpDeduction = cppSelfEmpTotal / 2;
-  if (cppSelfEmpDeduction > 0) {
-    deductionItems.push({ label: "CPP (Self-employed) – deductible half", amount: cppSelfEmpDeduction });
-    totalDeductions += cppSelfEmpDeduction;
-  }
+// Remaining CPP1 base that wasn't already pensionable through employment
+const cpp1BaseRemaining = Math.max(0, cpp1BaseCombined - cpp1BaseEmp);
+
+// Self-employed CPP1 on remaining room (both halves)
+const cpp1SE = Math.min(cpp1BaseRemaining * CPP_RATE_SELFEMP, CPP_MAX_SELFEMP);
+
+// CPP2 bases: above YMPE up to YAMPE (no basic exemption here)
+const empForCpp2 = Math.min(employmentIncome, CPP_YAMPE);
+const combinedForCpp2 = Math.min(employmentIncome + selfEmploymentIncome, CPP_YAMPE);
+
+const cpp2BaseEmp = Math.max(0, empForCpp2 - CPP_YMPE);
+const cpp2BaseCombined = Math.max(0, combinedForCpp2 - CPP_YMPE);
+
+// Remaining CPP2 base not already covered via employment
+const cpp2BaseRemaining = Math.max(0, cpp2BaseCombined - cpp2BaseEmp);
+
+// Self-employed CPP2 on remaining room (both halves)
+const cpp2SE = Math.min(cpp2BaseRemaining * CPP2_RATE_SELFEMP, CPP2_MAX_SELFEMP);
+
+const cppSelfEmpTotal = cpp1SE + cpp2SE;
+
+// Half of self-employed CPP is deductible
+const cppSelfEmpDeduction = cppSelfEmpTotal / 2;
+if (cppSelfEmpDeduction > 0) {
+  deductionItems.push({ label: "CPP (Self-employed) – deductible half", amount: cppSelfEmpDeduction });
+  totalDeductions += cppSelfEmpDeduction;
+}
+
 
   // ---- Taxable/net income approximation ----
   // For your input set, we treat taxableIncome ~= netIncome for credit threshold purposes.
