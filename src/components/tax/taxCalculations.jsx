@@ -555,9 +555,18 @@ export function calculateTax({
   const fedBpa = credits.disableBasicPersonal ? 0 : federalBasicPersonalAmount(netIncomeForCredits);
 
   // Spouse/partner amount (user supplies spouse net income)
-  const spouseNetIncome = credits.spouseNetIncome || 0;
-  const fedSpouseMax = credits.spouseAmount ? federalSpouseMaxAmount(netIncomeForCredits) : 0;
-  const fedSpouseBase = credits.spouseAmount ? Math.max(0, fedSpouseMax - spouseNetIncome) : 0;
+  // We now expect credits.spouseAmount to be a boolean gate (from the checkbox)
+  // and credits.spouseNetIncome to be the value.
+  const hasSpouse = credits.spouseAmount === true;
+  const spouseNetIncomeInput = credits.spouseNetIncome;
+
+  // If checkbox is unchecked, credit is 0. 
+  // If checked, we parse the income (default 0 if empty/invalid).
+  const spouseNetIncome = hasSpouse ? Number(spouseNetIncomeInput || 0) : 0;
+
+  const fedSpouseMax = hasSpouse ? federalSpouseMaxAmount(netIncomeForCredits) : 0;
+  const fedSpouseBase = hasSpouse ? Math.max(0, fedSpouseMax - spouseNetIncome) : 0;
+
 
   const canadaEmploymentAmount =
     employmentIncome > 0 ? Math.min(CANADA_EMPLOYMENT_AMOUNT, employmentIncome) : 0;
@@ -617,8 +626,9 @@ export function calculateTax({
   provBpa = applyBpaPhaseout(provBpa, netIncomeForCredits, pdata.bpaPhaseout);
 
   // Provincial spouse/partner amount
-  const provSpouseMax = credits.spouseAmount ? pdata.spouseMax : 0;
-  const provSpouseBase = credits.spouseAmount ? Math.max(0, provSpouseMax - spouseNetIncome) : 0;
+  const provSpouseMax = hasSpouse ? pdata.spouseMax : 0;
+  const provSpouseBase = hasSpouse ? Math.max(0, provSpouseMax - spouseNetIncome) : 0;
+
 
   // Provincial medical (same claimable amount approach, but province fixed threshold differs)
   let provClaimableMedical = 0;

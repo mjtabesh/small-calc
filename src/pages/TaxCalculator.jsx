@@ -88,8 +88,8 @@ export default function TaxCalculatorPage() {
                 <button
                   onClick={() => handleModeChange(false)}
                   className={`relative p-4 rounded-xl border-2 transition-all text-left ${!isAdvanced ?
-                      'bder-teal-500 bg-teal-50' :
-                      'bder-slate-200 bg-white hover:border-slate-300'}`
+                    'border-teal-500 bg-teal-50' :
+                    'border-slate-200 bg-white hover:border-slate-300'}`
                   }>
 
                   <div className="flex items-start gap-3">
@@ -116,8 +116,8 @@ export default function TaxCalculatorPage() {
                 <button
                   onClick={() => handleModeChange(true)}
                   className={`relative p-4 rounded-xl border-2 transition-all text-left ${isAdvanced ?
-                      'bder-purple-500 bg-purple-50' :
-                      'bder-slate-200 bg-white hover:border-slate-300'}`
+                    'border-purple-500 bg-purple-50' :
+                    'border-slate-200 bg-white hover:border-slate-300'}`
                   }>
 
                   <div className="flex items-start gap-3">
@@ -226,13 +226,13 @@ export default function TaxCalculatorPage() {
               </p>
             </motion.div>
           </div>
-          </div>
-          </main>
+        </div>
+      </main>
 
-          {/* Comprehensive Tax Guide */}
-          <section className="border-t border-slate-200 bg-white">
-          <TaxGuide province={data.province} />
-          </section>
-          </div>);
+      {/* Comprehensive Tax Guide */}
+      <section className="border-t border-slate-200 bg-white">
+        <TaxGuide province={data.province} />
+      </section>
+    </div>);
 
 }
