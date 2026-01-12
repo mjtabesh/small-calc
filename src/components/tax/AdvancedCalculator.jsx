@@ -85,9 +85,9 @@ export default function AdvancedCalculator({ data, onChange }) {
     investment: false,
     rental: false,
     otherIncome: false,
-    retirement: false,
-    familyMedical: false,
-    workEducation: false
+    savingGiving: false,
+    familyHealthEducation: false,
+    specialSituations: false
   });
 
   const toggleSection = (section) => {
@@ -248,101 +248,27 @@ export default function AdvancedCalculator({ data, onChange }) {
             </div>
           </div>
 
-          {/* Personal Situation - Always visible */}
-          <div className="bg-white rounded-lg border border-slate-200 p-4 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-slate-100 rounded-lg">
-                <Heart className="h-4 w-4 text-slate-600" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-slate-900">Your Personal Situation</p>
-                <p className="text-xs text-slate-500">Basic credits everyone is eligible for</p>
-              </div>
-            </div>
-
-            <div className="space-y-3 pl-11">
-              <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
-                <Checkbox
-                  id="basic-personal"
-                  checked={!data.credits?.disableBasicPersonal}
-                  onCheckedChange={(checked) => handleChange('credits', 'disableBasicPersonal', !checked)}
-                />
-                <Label htmlFor="basic-personal" className="text-sm cursor-pointer">
-                  I want to claim the basic personal amount
-                </Label>
-              </div>
-
-              <div className="flex flex-col gap-3 p-3 bg-slate-50 rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <Checkbox
-                    id="spouse-amount-checkbox"
-                    checked={data.credits?.spouseAmount || false}
-                    onCheckedChange={(checked) => {
-                      onChange({
-                        ...data,
-                        credits: {
-                          ...data.credits,
-                          spouseAmount: checked,
-                          spouseNetIncome: checked ? (data.credits?.spouseNetIncome || 0) : 0
-                        }
-                      });
-                    }}
-                  />
-                  <Label htmlFor="spouse-amount-checkbox" className="text-sm cursor-pointer">
-                    I have a spouse or common-law partner
-                  </Label>
-                </div>
-
-                {data.credits?.spouseAmount && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="pl-7"
-                  >
-                    <IncomeInput
-                      id="spouse-net-income"
-                      label="What is their net income?"
-                      value={data.credits?.spouseNetIncome}
-                      onChange={(value) => handleChange('credits', 'spouseNetIncome', value)}
-                      hint="Their total income after deductions"
-                    />
-                  </motion.div>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
-                <Checkbox
-                  id="age-credit"
-                  checked={data.credits?.age65Plus}
-                  onCheckedChange={(checked) => handleChange('credits', 'age65Plus', checked)}
-                />
-                <Label htmlFor="age-credit" className="text-sm cursor-pointer flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-slate-400" />
-                  I am 65 years or older
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
-                <Checkbox
-                  id="disability"
-                  checked={data.credits?.disability}
-                  onCheckedChange={(checked) => handleChange('credits', 'disability', checked)}
-                />
-                <Label htmlFor="disability" className="text-sm cursor-pointer">
-                  I have an approved disability tax credit certificate
-                </Label>
-              </div>
+          {/* Basic Personal Amount - Always visible */}
+          <div className="bg-white rounded-lg border border-slate-200 p-4">
+            <div className="flex items-center space-x-3">
+              <Checkbox
+                id="basic-personal"
+                checked={!data.credits?.disableBasicPersonal}
+                onCheckedChange={(checked) => handleChange('credits', 'disableBasicPersonal', !checked)}
+              />
+              <Label htmlFor="basic-personal" className="text-sm cursor-pointer font-medium">
+                Claim basic personal amount (recommended for everyone)
+              </Label>
             </div>
           </div>
 
           {/* Collapsible sections for savings */}
           <CollapsibleSection
-            title="Retirement Savings (RRSP)"
+            title="Saving & Giving"
             icon={PiggyBank}
-            hint="Contributions to your retirement savings plan"
-            isOpen={expandedSections.retirement || (data.deductions?.rrsp > 0)}
-            onToggle={() => toggleSection('retirement')}
+            hint="RRSP contributions and charitable donations"
+            isOpen={expandedSections.savingGiving || (data.deductions?.rrsp > 0) || (data.credits?.donations > 0)}
+            onToggle={() => toggleSection('savingGiving')}
           >
             <IncomeInput
               id="rrsp"
@@ -351,14 +277,21 @@ export default function AdvancedCalculator({ data, onChange }) {
               onChange={(value) => handleChange('deductions', 'rrsp', value)}
               hint="Maximum 18% of previous year's income"
             />
+            <IncomeInput
+              id="donations"
+              label="Charitable Donations"
+              value={data.credits?.donations}
+              onChange={(value) => handleChange('credits', 'donations', value)}
+              hint="Total amount donated to registered charities"
+            />
           </CollapsibleSection>
 
           <CollapsibleSection
-            title="Family & Medical"
+            title="Family, Health & Education"
             icon={Heart}
-            hint="Childcare, medical expenses, and support payments"
-            isOpen={expandedSections.familyMedical || (data.deductions?.childcare > 0) || (data.credits?.medicalExpenses > 0) || (data.deductions?.supportPayments > 0)}
-            onToggle={() => toggleSection('familyMedical')}
+            hint="Childcare, medical expenses, and tuition fees"
+            isOpen={expandedSections.familyHealthEducation || (data.deductions?.childcare > 0) || (data.credits?.medicalExpenses > 0) || (data.credits?.tuition > 0)}
+            onToggle={() => toggleSection('familyHealthEducation')}
           >
             <IncomeInput
               id="childcare"
@@ -375,56 +308,113 @@ export default function AdvancedCalculator({ data, onChange }) {
               hint="Total medical expenses (must exceed 3% of net income)"
             />
             <IncomeInput
-              id="support-payments"
-              label="Support Payments"
-              value={data.deductions?.supportPayments}
-              onChange={(value) => handleChange('deductions', 'supportPayments', value)}
-              hint="Child or spousal support (if deductible under your agreement)"
-            />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="Work, Education & Donations"
-            icon={GraduationCap}
-            hint="Union dues, tuition, charitable donations, moving, and other"
-            isOpen={expandedSections.workEducation || (data.deductions?.unionDues > 0) || (data.credits?.tuition > 0) || (data.credits?.donations > 0) || (data.deductions?.movingExpenses > 0) || (data.deductions?.other > 0)}
-            onToggle={() => toggleSection('workEducation')}
-          >
-            <IncomeInput
-              id="union-dues"
-              label="Union & Professional Dues"
-              value={data.deductions?.unionDues}
-              onChange={(value) => handleChange('deductions', 'unionDues', value)}
-              hint="Annual dues paid to unions or professional associations"
-            />
-            <IncomeInput
               id="tuition"
               label="Tuition Fees"
               value={data.credits?.tuition}
               onChange={(value) => handleChange('credits', 'tuition', value)}
               hint="Post-secondary tuition (T2202 slip)"
             />
-            <IncomeInput
-              id="donations"
-              label="Charitable Donations"
-              value={data.credits?.donations}
-              onChange={(value) => handleChange('credits', 'donations', value)}
-              hint="Total amount donated to registered charities"
-            />
-            <IncomeInput
-              id="moving"
-              label="Moving Expenses"
-              value={data.deductions?.movingExpenses}
-              onChange={(value) => handleChange('deductions', 'movingExpenses', value)}
-              hint="If you moved at least 40 km closer to work or school"
-            />
-            <IncomeInput
-              id="other-deductions"
-              label="Other Deductions"
-              value={data.deductions?.other}
-              onChange={(value) => handleChange('deductions', 'other', value)}
-              hint="Carrying charges, investment counsel fees, etc."
-            />
+          </CollapsibleSection>
+
+          <CollapsibleSection
+            title="Special Situations"
+            icon={Accessibility}
+            hint="Less common credits that apply in specific cases"
+            isOpen={expandedSections.specialSituations || (data.credits?.spouseAmount) || (data.credits?.disability) || (data.credits?.age65Plus) || (data.deductions?.unionDues > 0) || (data.deductions?.supportPayments > 0) || (data.deductions?.movingExpenses > 0) || (data.deductions?.other > 0)}
+            onToggle={() => toggleSection('specialSituations')}
+          >
+            <div className="flex flex-col gap-3 p-4 bg-slate-50 rounded-lg">
+              <div className="flex items-center space-x-3">
+                <Checkbox
+                  id="spouse-amount-checkbox"
+                  checked={data.credits?.spouseAmount || false}
+                  onCheckedChange={(checked) => {
+                    onChange({
+                      ...data,
+                      credits: {
+                        ...data.credits,
+                        spouseAmount: checked,
+                        spouseNetIncome: checked ? (data.credits?.spouseNetIncome || 0) : 0
+                      }
+                    });
+                  }}
+                />
+                <Label htmlFor="spouse-amount-checkbox" className="text-sm cursor-pointer">
+                  I have a spouse or common-law partner
+                </Label>
+              </div>
+
+              {data.credits?.spouseAmount && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="pl-7"
+                >
+                  <IncomeInput
+                    id="spouse-net-income"
+                    label="What is their net income?"
+                    value={data.credits?.spouseNetIncome}
+                    onChange={(value) => handleChange('credits', 'spouseNetIncome', value)}
+                    hint="Their total income after deductions"
+                  />
+                </motion.div>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
+              <Checkbox
+                id="disability"
+                checked={data.credits?.disability}
+                onCheckedChange={(checked) => handleChange('credits', 'disability', checked)}
+              />
+              <Label htmlFor="disability" className="text-sm cursor-pointer">
+                I have an approved disability tax credit certificate
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
+              <Checkbox
+                id="age-credit"
+                checked={data.credits?.age65Plus}
+                onCheckedChange={(checked) => handleChange('credits', 'age65Plus', checked)}
+              />
+              <Label htmlFor="age-credit" className="text-sm cursor-pointer flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-slate-400" />
+                I am 65 years or older
+              </Label>
+            </div>
+
+            <div className="border-t border-slate-200 pt-4 mt-4 space-y-4">
+              <IncomeInput
+                id="union-dues"
+                label="Union & Professional Dues"
+                value={data.deductions?.unionDues}
+                onChange={(value) => handleChange('deductions', 'unionDues', value)}
+                hint="Annual dues paid to unions or professional associations"
+              />
+              <IncomeInput
+                id="support-payments"
+                label="Support Payments"
+                value={data.deductions?.supportPayments}
+                onChange={(value) => handleChange('deductions', 'supportPayments', value)}
+                hint="Child or spousal support (if deductible under your agreement)"
+              />
+              <IncomeInput
+                id="moving"
+                label="Moving Expenses"
+                value={data.deductions?.movingExpenses}
+                onChange={(value) => handleChange('deductions', 'movingExpenses', value)}
+                hint="If you moved at least 40 km closer to work or school"
+              />
+              <IncomeInput
+                id="other-deductions"
+                label="Other Deductions"
+                value={data.deductions?.other}
+                onChange={(value) => handleChange('deductions', 'other', value)}
+                hint="Carrying charges, investment counsel fees, etc."
+              />
+            </div>
           </CollapsibleSection>
         </TabsContent>
 
