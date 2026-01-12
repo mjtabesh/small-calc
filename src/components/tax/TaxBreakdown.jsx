@@ -116,10 +116,10 @@ export default function TaxBreakdown({ results }) {
                 <span className="text-sm font-medium text-slate-700 tabular-nums">-{formatCurrency(totalDeductions)}</span>
               </button>
               {deductionsOpen && (
-                <div className="pl-8 space-y-2 pb-2">
+                <div className="space-y-2 pb-2">
                   {deductionItems.map((item, idx) => (
                     <div key={idx} className="flex items-center justify-between">
-                      <span className="text-sm text-slate-500">{item.label}</span>
+                      <span className="text-sm text-slate-500 pl-8">{item.label}</span>
                       <span className="text-sm text-slate-600 font-medium tabular-nums">-{formatCurrency(item.amount)}</span>
                     </div>
                   ))}
@@ -152,13 +152,13 @@ export default function TaxBreakdown({ results }) {
                 <span className="text-sm font-medium text-slate-700 tabular-nums">-{formatCurrency(federalTax + provincialTax)}</span>
               </button>
               {taxesOpen && (
-                <div className="pl-8 space-y-2 pb-2">
+                <div className="space-y-2 pb-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-500">Federal</span>
+                    <span className="text-sm text-slate-500 pl-8">Federal</span>
                     <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(federalTax)}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-500">{provinceName}</span>
+                    <span className="text-sm text-slate-500 pl-8">{provinceName}</span>
                     <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(provincialTax)}</span>
                   </div>
                 </div>
@@ -178,22 +178,22 @@ export default function TaxBreakdown({ results }) {
                     <span className="text-sm font-medium text-slate-700 tabular-nums">-{formatCurrency((cpp?.employment || 0) + (cpp?.selfEmployment || 0) + (ei?.premium || 0))}</span>
                   </button>
                   {contributionsOpen && (
-                    <div className="pl-8 space-y-2 pb-2">
+                    <div className="space-y-2 pb-2">
                       {cpp?.employment > 0 && (
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-500">CPP (Employment)</span>
+                          <span className="text-sm text-slate-500 pl-8">CPP (Employment)</span>
                           <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(cpp.employment)}</span>
                         </div>
                       )}
                       {cpp?.selfEmployment > 0 && (
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-500">CPP (Self-Employment)</span>
+                          <span className="text-sm text-slate-500 pl-8">CPP (Self-Employment)</span>
                           <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(cpp.selfEmployment)}</span>
                         </div>
                       )}
                       {ei?.premium > 0 && (
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-500">EI Premium</span>
+                          <span className="text-sm text-slate-500 pl-8">EI Premium</span>
                           <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(ei.premium)}</span>
                         </div>
                       )}
@@ -233,10 +233,10 @@ export default function TaxBreakdown({ results }) {
                             <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(credits.federal.total)}</span>
                           </button>
                           {federalCreditsOpen && (
-                            <div className="pl-6 space-y-1.5">
+                            <div className="space-y-1.5">
                               {credits.federal.items.map((item, idx) => (
                                 <div key={`fed-${idx}`} className="flex items-center justify-between">
-                                  <span className="text-sm text-slate-400">{item.label}</span>
+                                  <span className="text-sm text-slate-400 pl-12">{item.label}</span>
                                   <span className="text-sm text-slate-500 tabular-nums">{formatCurrency(item.amount)}</span>
                                 </div>
                               ))}
@@ -257,10 +257,10 @@ export default function TaxBreakdown({ results }) {
                             <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(credits.provincial.total)}</span>
                           </button>
                           {provincialCreditsOpen && (
-                            <div className="pl-6 space-y-1.5">
+                            <div className="space-y-1.5">
                               {credits.provincial.items.map((item, idx) => (
                                 <div key={`prov-${idx}`} className="flex items-center justify-between">
-                                  <span className="text-sm text-slate-400">{item.label}</span>
+                                  <span className="text-sm text-slate-400 pl-12">{item.label}</span>
                                   <span className="text-sm text-slate-500 tabular-nums">{formatCurrency(item.amount)}</span>
                                 </div>
                               ))}
