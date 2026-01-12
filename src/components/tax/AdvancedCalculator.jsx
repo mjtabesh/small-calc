@@ -85,15 +85,9 @@ export default function AdvancedCalculator({ data, onChange }) {
     investment: false,
     rental: false,
     otherIncome: false,
-    rrsp: false,
-    unionDues: false,
-    childcare: false,
-    supportPayments: false,
-    moving: false,
-    otherDeductions: false,
-    donations: false,
-    medical: false,
-    tuition: false
+    retirement: false,
+    familyMedical: false,
+    workEducation: false
   });
 
   const toggleSection = (section) => {
@@ -344,11 +338,11 @@ export default function AdvancedCalculator({ data, onChange }) {
 
           {/* Collapsible sections for savings */}
           <CollapsibleSection
-            title="Did you contribute to an RRSP?"
+            title="Retirement Savings (RRSP)"
             icon={PiggyBank}
-            hint="Retirement savings contributions reduce your taxable income"
-            isOpen={expandedSections.rrsp || (data.deductions?.rrsp > 0)}
-            onToggle={() => toggleSection('rrsp')}
+            hint="Contributions to your retirement savings plan"
+            isOpen={expandedSections.retirement || (data.deductions?.rrsp > 0)}
+            onToggle={() => toggleSection('retirement')}
           >
             <IncomeInput
               id="rrsp"
@@ -360,75 +354,11 @@ export default function AdvancedCalculator({ data, onChange }) {
           </CollapsibleSection>
 
           <CollapsibleSection
-            title="Did you make charitable donations?"
-            icon={HeartHandshake}
-            hint="Donations to registered charities with official receipts"
-            isOpen={expandedSections.donations || (data.credits?.donations > 0)}
-            onToggle={() => toggleSection('donations')}
-          >
-            <IncomeInput
-              id="donations"
-              label="Total Donations"
-              value={data.credits?.donations}
-              onChange={(value) => handleChange('credits', 'donations', value)}
-              hint="Total amount donated to registered charities"
-            />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="Did you have medical expenses?"
+            title="Family & Medical"
             icon={Heart}
-            hint="Out-of-pocket medical costs for you or your family"
-            isOpen={expandedSections.medical || (data.credits?.medicalExpenses > 0)}
-            onToggle={() => toggleSection('medical')}
-          >
-            <IncomeInput
-              id="medical"
-              label="Medical Expenses"
-              value={data.credits?.medicalExpenses}
-              onChange={(value) => handleChange('credits', 'medicalExpenses', value)}
-              hint="Total medical expenses (must exceed 3% of net income)"
-            />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="Did you pay tuition fees?"
-            icon={GraduationCap}
-            hint="Post-secondary education tuition"
-            isOpen={expandedSections.tuition || (data.credits?.tuition > 0)}
-            onToggle={() => toggleSection('tuition')}
-          >
-            <IncomeInput
-              id="tuition"
-              label="Tuition Fees"
-              value={data.credits?.tuition}
-              onChange={(value) => handleChange('credits', 'tuition', value)}
-              hint="Post-secondary tuition (T2202 slip)"
-            />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="Do you pay union or professional dues?"
-            icon={Users}
-            hint="Annual membership fees for work-related unions or associations"
-            isOpen={expandedSections.unionDues || (data.deductions?.unionDues > 0)}
-            onToggle={() => toggleSection('unionDues')}
-          >
-            <IncomeInput
-              id="union-dues"
-              label="Union & Professional Dues"
-              value={data.deductions?.unionDues}
-              onChange={(value) => handleChange('deductions', 'unionDues', value)}
-              hint="Annual dues paid to unions or professional associations"
-            />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="Did you have childcare expenses?"
-            icon={Baby}
-            hint="Daycare, camps, or babysitting costs"
-            isOpen={expandedSections.childcare || (data.deductions?.childcare > 0)}
-            onToggle={() => toggleSection('childcare')}
+            hint="Childcare, medical expenses, and support payments"
+            isOpen={expandedSections.familyMedical || (data.deductions?.childcare > 0) || (data.credits?.medicalExpenses > 0) || (data.deductions?.supportPayments > 0)}
+            onToggle={() => toggleSection('familyMedical')}
           >
             <IncomeInput
               id="childcare"
@@ -437,15 +367,13 @@ export default function AdvancedCalculator({ data, onChange }) {
               onChange={(value) => handleChange('deductions', 'childcare', value)}
               hint="Daycare, summer camps, nannies, babysitters"
             />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="Did you make support payments?"
-            icon={Heart}
-            hint="Child or spousal support payments"
-            isOpen={expandedSections.supportPayments || (data.deductions?.supportPayments > 0)}
-            onToggle={() => toggleSection('supportPayments')}
-          >
+            <IncomeInput
+              id="medical"
+              label="Medical Expenses"
+              value={data.credits?.medicalExpenses}
+              onChange={(value) => handleChange('credits', 'medicalExpenses', value)}
+              hint="Total medical expenses (must exceed 3% of net income)"
+            />
             <IncomeInput
               id="support-payments"
               label="Support Payments"
@@ -456,12 +384,33 @@ export default function AdvancedCalculator({ data, onChange }) {
           </CollapsibleSection>
 
           <CollapsibleSection
-            title="Did you move for work or school?"
-            icon={Truck}
-            hint="Moving expenses if you moved 40+ km closer"
-            isOpen={expandedSections.moving || (data.deductions?.movingExpenses > 0)}
-            onToggle={() => toggleSection('moving')}
+            title="Work, Education & Donations"
+            icon={GraduationCap}
+            hint="Union dues, tuition, charitable donations, moving, and other"
+            isOpen={expandedSections.workEducation || (data.deductions?.unionDues > 0) || (data.credits?.tuition > 0) || (data.credits?.donations > 0) || (data.deductions?.movingExpenses > 0) || (data.deductions?.other > 0)}
+            onToggle={() => toggleSection('workEducation')}
           >
+            <IncomeInput
+              id="union-dues"
+              label="Union & Professional Dues"
+              value={data.deductions?.unionDues}
+              onChange={(value) => handleChange('deductions', 'unionDues', value)}
+              hint="Annual dues paid to unions or professional associations"
+            />
+            <IncomeInput
+              id="tuition"
+              label="Tuition Fees"
+              value={data.credits?.tuition}
+              onChange={(value) => handleChange('credits', 'tuition', value)}
+              hint="Post-secondary tuition (T2202 slip)"
+            />
+            <IncomeInput
+              id="donations"
+              label="Charitable Donations"
+              value={data.credits?.donations}
+              onChange={(value) => handleChange('credits', 'donations', value)}
+              hint="Total amount donated to registered charities"
+            />
             <IncomeInput
               id="moving"
               label="Moving Expenses"
@@ -469,15 +418,6 @@ export default function AdvancedCalculator({ data, onChange }) {
               onChange={(value) => handleChange('deductions', 'movingExpenses', value)}
               hint="If you moved at least 40 km closer to work or school"
             />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="Other deductions?"
-            icon={PiggyBank}
-            hint="Other eligible tax deductions"
-            isOpen={expandedSections.otherDeductions || (data.deductions?.other > 0)}
-            onToggle={() => toggleSection('otherDeductions')}
-          >
             <IncomeInput
               id="other-deductions"
               label="Other Deductions"
