@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingDown, TrendingUp, Wallet, Building2, MapPin, PiggyBank, Receipt } from "lucide-react";
+import { TrendingDown, TrendingUp, Wallet, Building2, MapPin, PiggyBank, Receipt, ChevronDown, ChevronRight } from "lucide-react";
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-CA', {
@@ -14,6 +15,11 @@ const formatPercent = (value) => {
 };
 
 export default function TaxBreakdown({ results }) {
+  const [deductionsOpen, setDeductionsOpen] = useState(false);
+  const [creditsOpen, setCreditsOpen] = useState(false);
+  const [federalCreditsOpen, setFederalCreditsOpen] = useState(false);
+  const [provincialCreditsOpen, setProvincialCreditsOpen] = useState(false);
+
   if (!results) return null;
 
   const {
@@ -69,19 +75,22 @@ export default function TaxBreakdown({ results }) {
           {/* Deductions */}
           {totalDeductions > 0 && (
             <>
-              <div className="px-4 py-2 bg-slate-100">
-                <span className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Deductions</span>
-              </div>
-              {deductionItems.map((item, idx) => (
-                <div key={idx} className="p-4 flex items-center justify-between pl-8">
+              <button
+                onClick={() => setDeductionsOpen(!deductionsOpen)}
+                className="w-full p-4 flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  {deductionsOpen ? <ChevronDown className="h-4 w-4 text-slate-600" /> : <ChevronRight className="h-4 w-4 text-slate-600" />}
+                  <span className="text-sm font-semibold text-slate-700">Total Deductions</span>
+                </div>
+                <span className="text-lg font-semibold text-red-600">-{formatCurrency(totalDeductions)}</span>
+              </button>
+              {deductionsOpen && deductionItems.map((item, idx) => (
+                <div key={idx} className="p-4 flex items-center justify-between pl-12 bg-slate-50/50">
                   <span className="text-sm text-slate-700">{item.label}</span>
                   <span className="text-base font-medium text-red-600">-{formatCurrency(item.amount)}</span>
                 </div>
               ))}
-              <div className="p-4 flex items-center justify-between bg-slate-50">
-                <span className="text-sm font-semibold text-slate-700">Total Deductions</span>
-                <span className="text-lg font-semibold text-red-600">-{formatCurrency(totalDeductions)}</span>
-              </div>
             </>
           )}
 
@@ -137,44 +146,64 @@ export default function TaxBreakdown({ results }) {
           {/* Credits */}
           {credits && ((credits.federal?.total || 0) + (credits.provincial?.total || 0)) > 0 && (
             <>
-              <div className="px-4 py-2 bg-green-100">
-                <span className="text-xs font-semibold text-green-800 uppercase tracking-wider">Tax Credits</span>
-              </div>
-
-              {/* Federal Credits */}
-              {credits.federal?.items?.length > 0 && (
-                <>
-                  <div className="px-6 py-2 bg-green-50">
-                    <span className="text-xs font-semibold text-green-700 uppercase tracking-wider">Federal</span>
-                  </div>
-                  {credits.federal.items.map((item, idx) => (
-                    <div key={`fed-${idx}`} className="p-4 flex items-center justify-between pl-10">
-                      <span className="text-sm text-slate-700">{item.label}</span>
-                      <span className="text-base font-medium text-green-700">-{formatCurrency(item.amount)}</span>
-                    </div>
-                  ))}
-                </>
-              )}
-
-              {/* Provincial Credits */}
-              {credits.provincial?.items?.length > 0 && (
-                <>
-                  <div className="px-6 py-2 bg-green-50">
-                    <span className="text-xs font-semibold text-green-700 uppercase tracking-wider">{provinceName}</span>
-                  </div>
-                  {credits.provincial.items.map((item, idx) => (
-                    <div key={`prov-${idx}`} className="p-4 flex items-center justify-between pl-10">
-                      <span className="text-sm text-slate-700">{item.label}</span>
-                      <span className="text-base font-medium text-green-700">-{formatCurrency(item.amount)}</span>
-                    </div>
-                  ))}
-                </>
-              )}
-
-              <div className="p-4 flex items-center justify-between bg-green-50">
-                <span className="text-sm font-semibold text-green-800">Total Tax Credits</span>
+              <button
+                onClick={() => setCreditsOpen(!creditsOpen)}
+                className="w-full p-4 flex items-center justify-between bg-green-50 hover:bg-green-100 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  {creditsOpen ? <ChevronDown className="h-4 w-4 text-green-700" /> : <ChevronRight className="h-4 w-4 text-green-700" />}
+                  <span className="text-sm font-semibold text-green-800">Total Tax Credits</span>
+                </div>
                 <span className="text-lg font-semibold text-green-700">-{formatCurrency((credits.federal?.total || 0) + (credits.provincial?.total || 0))}</span>
-              </div>
+              </button>
+
+              {creditsOpen && (
+                <>
+                  {/* Federal Credits */}
+                  {credits.federal?.items?.length > 0 && (
+                    <>
+                      <button
+                        onClick={() => setFederalCreditsOpen(!federalCreditsOpen)}
+                        className="w-full px-6 py-3 flex items-center justify-between bg-green-50/50 hover:bg-green-100/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          {federalCreditsOpen ? <ChevronDown className="h-3.5 w-3.5 text-green-600" /> : <ChevronRight className="h-3.5 w-3.5 text-green-600" />}
+                          <span className="text-sm font-medium text-green-700">Federal Credits</span>
+                        </div>
+                        <span className="text-base font-semibold text-green-700">-{formatCurrency(credits.federal.total)}</span>
+                      </button>
+                      {federalCreditsOpen && credits.federal.items.map((item, idx) => (
+                        <div key={`fed-${idx}`} className="p-3 flex items-center justify-between pl-16 bg-green-50/30">
+                          <span className="text-sm text-slate-700">{item.label}</span>
+                          <span className="text-sm font-medium text-green-700">-{formatCurrency(item.amount)}</span>
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Provincial Credits */}
+                  {credits.provincial?.items?.length > 0 && (
+                    <>
+                      <button
+                        onClick={() => setProvincialCreditsOpen(!provincialCreditsOpen)}
+                        className="w-full px-6 py-3 flex items-center justify-between bg-green-50/50 hover:bg-green-100/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          {provincialCreditsOpen ? <ChevronDown className="h-3.5 w-3.5 text-green-600" /> : <ChevronRight className="h-3.5 w-3.5 text-green-600" />}
+                          <span className="text-sm font-medium text-green-700">{provinceName} Credits</span>
+                        </div>
+                        <span className="text-base font-semibold text-green-700">-{formatCurrency(credits.provincial.total)}</span>
+                      </button>
+                      {provincialCreditsOpen && credits.provincial.items.map((item, idx) => (
+                        <div key={`prov-${idx}`} className="p-3 flex items-center justify-between pl-16 bg-green-50/30">
+                          <span className="text-sm text-slate-700">{item.label}</span>
+                          <span className="text-sm font-medium text-green-700">-{formatCurrency(item.amount)}</span>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </>
+              )}
             </>
           )}
 
