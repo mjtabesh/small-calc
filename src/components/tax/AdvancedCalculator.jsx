@@ -6,19 +6,9 @@ import { Label } from "@/components/ui/label";
 import ProvinceSelector from "./ProvinceSelector";
 import IncomeInput from "./IncomeInput";
 import {
-  Wallet,
-  PiggyBank,
-  Briefcase,
-  TrendingUp,
-  Home,
-  Banknote,
   HelpCircle,
-  Users,
-  Baby,
-  Truck,
   Heart,
-  GraduationCap,
-  HeartHandshake,
+  PiggyBank,
   Accessibility,
   Calendar,
   ChevronDown,
