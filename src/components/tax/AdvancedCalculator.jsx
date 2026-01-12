@@ -113,9 +113,9 @@ export default function AdvancedCalculator({ data, onChange }) {
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-xl h-auto">
-          <TabButton value="income" icon={Wallet} label="Income" isActive={activeTab === "income"} />
-          <TabButton value="savings" icon={PiggyBank} label="Tax Savings" isActive={activeTab === "savings"} />
+        <TabsList className="w-full">
+          <TabsTrigger value="income" className="flex-1">Income</TabsTrigger>
+          <TabsTrigger value="savings" className="flex-1">Tax Savings</TabsTrigger>
         </TabsList>
 
 
