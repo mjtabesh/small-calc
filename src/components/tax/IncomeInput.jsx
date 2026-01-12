@@ -29,13 +29,10 @@ export default function IncomeInput({
           thousandSeparator={true}
           decimalScale={0}
           fixedDecimalScale={false}
+          allowNegative={false}
           placeholder={placeholder}
           customInput={Input}
           className="pl-9 h-12 bg-white border-slate-200 focus:ring-teal-500 focus:border-teal-500 text-right font-mono"
-          isAllowed={(values) => {
-            const { floatValue } = values;
-            return floatValue === undefined || floatValue >= 0;
-          }}
         />
       </div>
       {hint && <p className="text-xs text-slate-500">{hint}</p>}
