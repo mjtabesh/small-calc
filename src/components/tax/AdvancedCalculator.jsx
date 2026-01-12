@@ -248,20 +248,6 @@ export default function AdvancedCalculator({ data, onChange }) {
             </div>
           </div>
 
-          {/* Basic Personal Amount - Always visible */}
-          <div className="bg-white rounded-lg border border-slate-200 p-4">
-            <div className="flex items-center space-x-3">
-              <Checkbox
-                id="basic-personal"
-                checked={!data.credits?.disableBasicPersonal}
-                onCheckedChange={(checked) => handleChange('credits', 'disableBasicPersonal', !checked)}
-              />
-              <Label htmlFor="basic-personal" className="text-sm cursor-pointer font-medium">
-                Claim basic personal amount (recommended for everyone)
-              </Label>
-            </div>
-          </div>
-
           {/* Collapsible sections for savings */}
           <CollapsibleSection
             title="Saving & Giving"
