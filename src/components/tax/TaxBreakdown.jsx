@@ -152,7 +152,7 @@ export default function TaxBreakdown({ results }) {
               >
                 <div className="flex items-center gap-2">
                   {creditsOpen ? <ChevronDown className="h-4 w-4 text-green-700" /> : <ChevronRight className="h-4 w-4 text-green-700" />}
-                  <span className="text-sm font-semibold text-green-800">Total Tax Credits</span>
+                  <span className="text-sm font-semibold text-green-800">Tax Credits</span>
                 </div>
                 <span className="text-lg font-semibold text-green-700">-{formatCurrency((credits.federal?.total || 0) + (credits.provincial?.total || 0))}</span>
               </button>
