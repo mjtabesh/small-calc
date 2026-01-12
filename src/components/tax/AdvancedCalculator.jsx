@@ -25,17 +25,38 @@ import {
   ChevronUp
 } from "lucide-react";
 
-const TabButton = ({ value, icon: Icon, label, isActive }) => (
-  <TabsTrigger
-    value={value}
-    className={`flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all ${isActive
-      ? 'bg-[#1e3a5f] text-white shadow-lg'
-      : 'bg-white text-slate-600 hover:bg-slate-50'
-      }`}
+const TabButton = ({ value, icon: Icon, label, description, isActive, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`flex items-start gap-4 p-5 rounded-xl transition-all duration-200 text-left border-2 ${
+      isActive
+        ? 'bg-indigo-50 border-indigo-500 shadow-md'
+        : 'bg-white border-slate-200 hover:border-indigo-200 hover:shadow-sm'
+    }`}
   >
-    <Icon className="h-4 w-4" />
-    <span className="font-medium">{label}</span>
-  </TabsTrigger>
+    <div className={`p-3 rounded-lg transition-colors ${
+      isActive ? 'bg-indigo-500 text-white' : 'bg-slate-100 text-slate-600'
+    }`}>
+      <Icon className="h-6 w-6" />
+    </div>
+    <div className="flex-1">
+      <p className={`text-base font-semibold mb-1 transition-colors ${
+        isActive ? 'text-indigo-900' : 'text-slate-900'
+      }`}>
+        {label}
+      </p>
+      <p className={`text-xs transition-colors ${
+        isActive ? 'text-indigo-700' : 'text-slate-500'
+      }`}>
+        {description}
+      </p>
+    </div>
+    {isActive && (
+      <div className="flex items-center">
+        <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+      </div>
+    )}
+  </button>
 );
 
 const CollapsibleSection = ({ title, icon: Icon, isOpen, onToggle, children, hint }) => (
@@ -124,10 +145,24 @@ export default function AdvancedCalculator({ data, onChange }) {
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-xl h-auto">
-          <TabButton value="income" icon={Wallet} label="Income" isActive={activeTab === "income"} />
-          <TabButton value="savings" icon={PiggyBank} label="Tax Savings" isActive={activeTab === "savings"} />
-        </TabsList>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <TabButton 
+            value="income" 
+            icon={Wallet} 
+            label="Income" 
+            description="Enter all your income sources"
+            isActive={activeTab === "income"} 
+            onClick={() => setActiveTab("income")}
+          />
+          <TabButton 
+            value="savings" 
+            icon={PiggyBank} 
+            label="Tax Savings" 
+            description="Add deductions and credits"
+            isActive={activeTab === "savings"} 
+            onClick={() => setActiveTab("savings")}
+          />
+        </div>
 
 
         <TabsContent value="income" className="mt-6 space-y-4">
