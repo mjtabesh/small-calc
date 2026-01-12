@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingDown, TrendingUp, Wallet, Building2, MapPin, PiggyBank, Receipt, ChevronDown, ChevronRight, Info } from "lucide-react";
+import { TrendingDown, TrendingUp, Wallet, Building2, MapPin, PiggyBank, Receipt, ChevronDown, ChevronRight } from "lucide-react";
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-CA', {
     style: 'currency',
     currency: 'CAD',
-    minimumFractionDigits: 0
+    minimumFractionDigits: 2
   }).format(amount);
 };
 
@@ -15,14 +15,10 @@ const formatPercent = (value) => {
 };
 
 export default function TaxBreakdown({ results }) {
-  const [showDetails, setShowDetails] = useState(false);
-  const [taxesOpen, setTaxesOpen] = useState(false);
-  const [contributionsOpen, setContributionsOpen] = useState(false);
   const [deductionsOpen, setDeductionsOpen] = useState(false);
   const [creditsOpen, setCreditsOpen] = useState(false);
   const [federalCreditsOpen, setFederalCreditsOpen] = useState(false);
   const [provincialCreditsOpen, setProvincialCreditsOpen] = useState(false);
-  const [ratesOpen, setRatesOpen] = useState(false);
 
   if (!results) return null;
 
@@ -60,46 +56,20 @@ export default function TaxBreakdown({ results }) {
   ];
   const provinceName = PROVINCES.find(p => p.code === province)?.name || province;
 
-  const totalCreditsAmount = (credits?.federal?.total || 0) + (credits?.provincial?.total || 0);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="space-y-4"
+      className="space-y-6"
     >
-      {/* Hero Section - Take-Home Pay */}
-      <div className="bg-gradient-to-br from-[#1e3a5f] to-[#0f2744] rounded-2xl p-8 text-white">
-        <div className="text-center">
-          <p className="text-sm text-white/60 mb-2">From {formatCurrency(totalIncome)} earned, your take-home is</p>
-          <div className="text-5xl font-bold mb-3">{formatCurrency(takeHome)}</div>
-          <p className="text-sm text-white/70">That's {formatCurrency(Math.round(takeHome / 12))} per month</p>
-          <p className="text-xs text-white/50 mt-3">After income tax, CPP, EI, and credits</p>
-        </div>
-      </div>
-
-      {/* Summary Card */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900 mb-1">How this breaks down</h3>
-            <p className="text-xs text-slate-500">See how we arrived at your take-home pay</p>
-          </div>
-          <button
-            onClick={() => setShowDetails(!showDetails)}
-            className="text-xs font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
-          >
-            {showDetails ? 'Hide' : 'Show'} details
-            {showDetails ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-          </button>
-        </div>
-
-        <div className="space-y-3">
+      {/* Tax Calculation Table */}
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="divide-y divide-slate-200">
           {/* Total Income */}
-          <div className="flex items-center justify-between py-2">
-            <span className="text-sm text-slate-600">Income</span>
-            <span className="text-sm font-semibold text-slate-900 tabular-nums">{formatCurrency(totalIncome)}</span>
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-sm font-medium text-slate-900">Total Income</span>
+            <span className="text-lg font-semibold text-slate-900">{formatCurrency(totalIncome)}</span>
           </div>
 
           {/* Deductions */}
@@ -107,216 +77,170 @@ export default function TaxBreakdown({ results }) {
             <>
               <button
                 onClick={() => setDeductionsOpen(!deductionsOpen)}
-                className="w-full flex items-center justify-between py-2 hover:bg-slate-50 rounded-lg px-2 -mx-2 transition-colors"
+                className="w-full p-4 flex items-center justify-between bg-blue-50 hover:bg-blue-100 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  {deductionsOpen ? <ChevronDown className="h-3.5 w-3.5 text-slate-400" /> : <ChevronRight className="h-3.5 w-3.5 text-slate-400" />}
-                  <span className="text-sm text-slate-600">Deductions</span>
+                  {deductionsOpen ? <ChevronDown className="h-4 w-4 text-blue-700" /> : <ChevronRight className="h-4 w-4 text-blue-700" />}
+                  <span className="text-sm font-semibold text-blue-800">Deductions</span>
                 </div>
-                <span className="text-sm font-medium text-slate-700 tabular-nums">-{formatCurrency(totalDeductions)}</span>
+                <span className="text-lg font-semibold text-blue-700">-{formatCurrency(totalDeductions)}</span>
               </button>
-              {deductionsOpen && (
-                <div className="space-y-2 pb-2">
-                  {deductionItems.map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between">
-                      <span className="text-sm text-slate-500 pl-8">{item.label}</span>
-                      <span className="text-sm text-slate-600 font-medium tabular-nums">-{formatCurrency(item.amount)}</span>
-                    </div>
-                  ))}
+              {deductionsOpen && deductionItems.map((item, idx) => (
+                <div key={idx} className="p-4 flex items-center justify-between pl-12 bg-blue-50/50">
+                  <span className="text-sm text-slate-700">{item.label}</span>
+                  <span className="text-base font-medium text-blue-700">-{formatCurrency(item.amount)}</span>
                 </div>
-              )}
+              ))}
             </>
           )}
 
-          {showDetails && (
+          {/* Taxable Income */}
+          <div className="p-4 flex items-center justify-between bg-blue-50">
+            <span className="text-sm font-semibold text-blue-900">Taxable Income</span>
+            <span className="text-lg font-bold text-blue-900">{formatCurrency(taxableIncome)}</span>
+          </div>
+
+          {/* Taxes & Contributions Section Header */}
+          <div className="px-4 py-2 bg-slate-100">
+            <span className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Taxes & Contributions</span>
+          </div>
+
+          {/* Federal Tax */}
+          <div className="p-4 flex items-center justify-between pl-8">
+            <span className="text-sm text-slate-700">Federal Tax</span>
+            <span className="text-base font-medium text-slate-900">{formatCurrency(federalTax)}</span>
+          </div>
+
+          {/* Provincial Tax */}
+          <div className="p-4 flex items-center justify-between pl-8">
+            <span className="text-sm text-slate-700">{provinceName} Tax</span>
+            <span className="text-base font-medium text-slate-900">{formatCurrency(provincialTax)}</span>
+          </div>
+
+          {/* CPP */}
+          {cpp && (cpp.employment > 0 || cpp.selfEmployment > 0) && (
             <>
-              <div className="border-t border-slate-100 pt-3">
-                <div className="bg-slate-50 rounded-lg px-3 py-2">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-slate-700">Taxable Income</span>
-                    <span className="text-sm font-semibold text-slate-900 tabular-nums">{formatCurrency(taxableIncome)}</span>
-                  </div>
-                  <p className="text-sm text-slate-500">This is the portion of your income that taxes are calculated on</p>
+              {cpp.employment > 0 && (
+                <div className="p-4 flex items-center justify-between pl-8">
+                  <span className="text-sm text-slate-700">CPP Contribution (Employment)</span>
+                  <span className="text-base font-medium text-slate-900">{formatCurrency(cpp.employment)}</span>
                 </div>
-              </div>
+              )}
+              {cpp.selfEmployment > 0 && (
+                <div className="p-4 flex items-center justify-between pl-8">
+                  <span className="text-sm text-slate-700">CPP Contribution (Self-Employment)</span>
+                  <span className="text-base font-medium text-slate-900">{formatCurrency(cpp.selfEmployment)}</span>
+                </div>
+              )}
+            </>
+          )}
 
-              {/* Income Taxes */}
+          {/* EI */}
+          {ei && ei.premium > 0 && (
+            <div className="p-4 flex items-center justify-between pl-8">
+              <span className="text-sm text-slate-700">EI Premium</span>
+              <span className="text-base font-medium text-slate-900">{formatCurrency(ei.premium)}</span>
+            </div>
+          )}
+
+          {/* Credits */}
+          {credits && ((credits.federal?.total || 0) + (credits.provincial?.total || 0)) > 0 && (
+            <>
               <button
-                onClick={() => setTaxesOpen(!taxesOpen)}
-                className="w-full flex items-center justify-between py-2 hover:bg-slate-50 rounded-lg px-2 -mx-2 transition-colors"
+                onClick={() => setCreditsOpen(!creditsOpen)}
+                className="w-full p-4 flex items-center justify-between bg-green-50 hover:bg-green-100 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  {taxesOpen ? <ChevronDown className="h-3.5 w-3.5 text-slate-400" /> : <ChevronRight className="h-3.5 w-3.5 text-slate-400" />}
-                  <span className="text-sm text-slate-600">Income taxes paid</span>
+                  {creditsOpen ? <ChevronDown className="h-4 w-4 text-green-700" /> : <ChevronRight className="h-4 w-4 text-green-700" />}
+                  <span className="text-sm font-semibold text-green-800">Tax Credits</span>
                 </div>
-                <span className="text-sm font-medium text-slate-700 tabular-nums">-{formatCurrency(federalTax + provincialTax)}</span>
+                <span className="text-lg font-semibold text-green-700">-{formatCurrency((credits.federal?.total || 0) + (credits.provincial?.total || 0))}</span>
               </button>
-              {taxesOpen && (
-                <div className="space-y-2 pb-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-500 pl-8">Federal</span>
-                    <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(federalTax)}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-500 pl-8">{provinceName}</span>
-                    <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(provincialTax)}</span>
-                  </div>
-                </div>
-              )}
 
-              {/* Required Contributions */}
-              {((cpp?.employment || 0) + (cpp?.selfEmployment || 0) + (ei?.premium || 0)) > 0 && (
+              {creditsOpen && (
                 <>
-                  <button
-                    onClick={() => setContributionsOpen(!contributionsOpen)}
-                    className="w-full flex items-center justify-between py-2 hover:bg-slate-50 rounded-lg px-2 -mx-2 transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      {contributionsOpen ? <ChevronDown className="h-3.5 w-3.5 text-slate-400" /> : <ChevronRight className="h-3.5 w-3.5 text-slate-400" />}
-                      <span className="text-sm text-slate-600">Required contributions (CPP & EI)</span>
-                    </div>
-                    <span className="text-sm font-medium text-slate-700 tabular-nums">-{formatCurrency((cpp?.employment || 0) + (cpp?.selfEmployment || 0) + (ei?.premium || 0))}</span>
-                  </button>
-                  {contributionsOpen && (
-                    <div className="space-y-2 pb-2">
-                      {cpp?.employment > 0 && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-500 pl-8">CPP (Employment)</span>
-                          <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(cpp.employment)}</span>
+                  {/* Federal Credits */}
+                  {credits.federal?.items?.length > 0 && (
+                    <>
+                      <button
+                        onClick={() => setFederalCreditsOpen(!federalCreditsOpen)}
+                        className="w-full px-6 py-3 flex items-center justify-between bg-green-50/50 hover:bg-green-100/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          {federalCreditsOpen ? <ChevronDown className="h-3.5 w-3.5 text-green-600" /> : <ChevronRight className="h-3.5 w-3.5 text-green-600" />}
+                          <span className="text-sm font-medium text-green-700">Federal Credits</span>
                         </div>
-                      )}
-                      {cpp?.selfEmployment > 0 && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-500 pl-8">CPP (Self-Employment)</span>
-                          <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(cpp.selfEmployment)}</span>
+                        <span className="text-base font-semibold text-green-700">-{formatCurrency(credits.federal.total)}</span>
+                      </button>
+                      {federalCreditsOpen && credits.federal.items.map((item, idx) => (
+                        <div key={`fed-${idx}`} className="p-3 flex items-center justify-between pl-16 bg-green-50/30">
+                          <span className="text-sm text-slate-700">{item.label}</span>
+                          <span className="text-sm font-medium text-green-700">-{formatCurrency(item.amount)}</span>
                         </div>
-                      )}
-                      {ei?.premium > 0 && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-500 pl-8">EI Premium</span>
-                          <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(ei.premium)}</span>
-                        </div>
-                      )}
-                    </div>
+                      ))}
+                    </>
                   )}
-                </>
-              )}
 
-              {/* Credits */}
-              {totalCreditsAmount > 0 && (
-                <>
-                  <div className="bg-emerald-50 rounded-lg px-3 py-2.5 -mx-2">
-                    <p className="text-sm text-emerald-700 mb-2">These credits reduce your tax dollar-for-dollar</p>
-                    <button
-                      onClick={() => setCreditsOpen(!creditsOpen)}
-                      className="w-full flex items-center justify-between hover:opacity-80 transition-opacity"
-                    >
-                      <div className="flex items-center gap-2">
-                        {creditsOpen ? <ChevronDown className="h-3.5 w-3.5 text-emerald-600" /> : <ChevronRight className="h-3.5 w-3.5 text-emerald-600" />}
-                        <span className="text-sm font-medium text-emerald-900">Credits applied</span>
-                      </div>
-                      <span className="text-sm font-semibold text-emerald-700 tabular-nums">-{formatCurrency(totalCreditsAmount)}</span>
-                    </button>
-                  </div>
-                  {creditsOpen && (
-                    <div className="pl-6 space-y-3 pt-2">
-                      {credits.federal?.items?.length > 0 && (
-                        <>
-                          <button
-                            onClick={() => setFederalCreditsOpen(!federalCreditsOpen)}
-                            className="w-full flex items-center justify-between hover:bg-emerald-50/50 rounded py-1"
-                          >
-                            <div className="flex items-center gap-1.5">
-                              {federalCreditsOpen ? <ChevronDown className="h-3 w-3 text-emerald-500" /> : <ChevronRight className="h-3 w-3 text-emerald-500" />}
-                              <span className="text-sm text-slate-500">Federal</span>
-                            </div>
-                            <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(credits.federal.total)}</span>
-                          </button>
-                          {federalCreditsOpen && (
-                            <div className="space-y-1.5">
-                              {credits.federal.items.map((item, idx) => (
-                                <div key={`fed-${idx}`} className="flex items-center justify-between">
-                                  <span className="text-sm text-slate-400 pl-12">{item.label}</span>
-                                  <span className="text-sm text-slate-500 tabular-nums">{formatCurrency(item.amount)}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </>
-                      )}
-                      {credits.provincial?.items?.length > 0 && (
-                        <>
-                          <button
-                            onClick={() => setProvincialCreditsOpen(!provincialCreditsOpen)}
-                            className="w-full flex items-center justify-between hover:bg-emerald-50/50 rounded py-1"
-                          >
-                            <div className="flex items-center gap-1.5">
-                              {provincialCreditsOpen ? <ChevronDown className="h-3 w-3 text-emerald-500" /> : <ChevronRight className="h-3 w-3 text-emerald-500" />}
-                              <span className="text-sm text-slate-500">{provinceName}</span>
-                            </div>
-                            <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(credits.provincial.total)}</span>
-                          </button>
-                          {provincialCreditsOpen && (
-                            <div className="space-y-1.5">
-                              {credits.provincial.items.map((item, idx) => (
-                                <div key={`prov-${idx}`} className="flex items-center justify-between">
-                                  <span className="text-sm text-slate-400 pl-12">{item.label}</span>
-                                  <span className="text-sm text-slate-500 tabular-nums">{formatCurrency(item.amount)}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </div>
+                  {/* Provincial Credits */}
+                  {credits.provincial?.items?.length > 0 && (
+                    <>
+                      <button
+                        onClick={() => setProvincialCreditsOpen(!provincialCreditsOpen)}
+                        className="w-full px-6 py-3 flex items-center justify-between bg-green-50/50 hover:bg-green-100/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          {provincialCreditsOpen ? <ChevronDown className="h-3.5 w-3.5 text-green-600" /> : <ChevronRight className="h-3.5 w-3.5 text-green-600" />}
+                          <span className="text-sm font-medium text-green-700">{provinceName} Credits</span>
+                        </div>
+                        <span className="text-base font-semibold text-green-700">-{formatCurrency(credits.provincial.total)}</span>
+                      </button>
+                      {provincialCreditsOpen && credits.provincial.items.map((item, idx) => (
+                        <div key={`prov-${idx}`} className="p-3 flex items-center justify-between pl-16 bg-green-50/30">
+                          <span className="text-sm text-slate-700">{item.label}</span>
+                          <span className="text-sm font-medium text-green-700">-{formatCurrency(item.amount)}</span>
+                        </div>
+                      ))}
+                    </>
                   )}
                 </>
               )}
             </>
           )}
+
+          {/* Net Income / Take-Home */}
+          <div className="p-5 flex items-center justify-between bg-gradient-to-br from-[#1e3a5f] to-[#0f2744]">
+            <div>
+              <span className="text-sm text-white/70 block">Your Take-Home Pay</span>
+              <span className="text-xs text-white/50">{formatCurrency(takeHome / 12)}/month</span>
+            </div>
+            <span className="text-3xl font-bold text-white">{formatCurrency(takeHome)}</span>
+          </div>
         </div>
       </div>
 
-      {/* Tax Rates */}
+      {/* Tax Rates Table */}
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-        <button
-          onClick={() => setRatesOpen(!ratesOpen)}
-          className="w-full px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            {ratesOpen ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronRight className="h-4 w-4 text-slate-400" />}
-            <div className="text-left">
-              <span className="text-sm font-semibold text-slate-700 block">Your tax rates</span>
-              <span className="text-xs text-slate-500">Understanding how much you pay</span>
-            </div>
-          </div>
-          <Info className="h-4 w-4 text-slate-400" />
-        </button>
-        
-        {ratesOpen && (
-          <div className="px-5 pb-5 space-y-4 border-t border-slate-100 pt-4">
+        <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
+          <span className="text-sm font-semibold text-slate-700">Tax Rates</span>
+        </div>
+        <div className="divide-y divide-slate-200">
+          <div className="p-4 flex items-center justify-between">
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-slate-900">Effective Rate</span>
-                <span className="text-2xl font-bold text-slate-900 tabular-nums">{formatPercent(effectiveTaxRate)}</span>
-              </div>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                This is your average tax rate across all your income. It shows what percentage of your total earnings went to taxes.
-              </p>
+              <span className="text-sm font-medium text-slate-900 block">Effective Rate</span>
+              <span className="text-xs text-slate-500">Your average tax rate</span>
             </div>
-            
-            <div className="border-t border-slate-100 pt-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-slate-900">Marginal Rate</span>
-                <span className="text-2xl font-bold text-slate-900 tabular-nums">{formatPercent(marginalRate)}</span>
-              </div>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                This rate applies only to your last dollars earned—not your entire income. It's what you'd pay on a bonus or raise.
-              </p>
-            </div>
+            <span className="text-xl font-bold text-slate-900">{formatPercent(effectiveTaxRate)}</span>
           </div>
-        )}
+          <div className="p-4 flex items-center justify-between">
+            <div>
+              <span className="text-sm font-medium text-slate-900 block">Marginal Rate</span>
+              <span className="text-xs text-slate-500">Tax on next dollar earned</span>
+            </div>
+            <span className="text-xl font-bold text-slate-900">{formatPercent(marginalRate)}</span>
+          </div>
+        </div>
       </div>
+
     </motion.div>
   );
 }
