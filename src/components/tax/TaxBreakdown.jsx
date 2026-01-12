@@ -77,18 +77,18 @@ export default function TaxBreakdown({ results }) {
             <>
               <button
                 onClick={() => setDeductionsOpen(!deductionsOpen)}
-                className="w-full p-4 flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition-colors"
+                className="w-full p-4 flex items-center justify-between bg-blue-50 hover:bg-blue-100 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  {deductionsOpen ? <ChevronDown className="h-4 w-4 text-slate-600" /> : <ChevronRight className="h-4 w-4 text-slate-600" />}
-                  <span className="text-sm font-semibold text-slate-700">Total Deductions</span>
+                  {deductionsOpen ? <ChevronDown className="h-4 w-4 text-blue-700" /> : <ChevronRight className="h-4 w-4 text-blue-700" />}
+                  <span className="text-sm font-semibold text-blue-800">Deductions</span>
                 </div>
-                <span className="text-lg font-semibold text-red-600">-{formatCurrency(totalDeductions)}</span>
+                <span className="text-lg font-semibold text-blue-700">-{formatCurrency(totalDeductions)}</span>
               </button>
               {deductionsOpen && deductionItems.map((item, idx) => (
-                <div key={idx} className="p-4 flex items-center justify-between pl-12 bg-slate-50/50">
+                <div key={idx} className="p-4 flex items-center justify-between pl-12 bg-blue-50/50">
                   <span className="text-sm text-slate-700">{item.label}</span>
-                  <span className="text-base font-medium text-red-600">-{formatCurrency(item.amount)}</span>
+                  <span className="text-base font-medium text-blue-700">-{formatCurrency(item.amount)}</span>
                 </div>
               ))}
             </>
