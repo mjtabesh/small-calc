@@ -6,16 +6,37 @@ import { Label } from "@/components/ui/label";
 import ProvinceSelector from "./ProvinceSelector";
 import IncomeInput from "./IncomeInput";
 import {
-  HelpCircle,
-  Heart,
+  Wallet,
   PiggyBank,
+  Briefcase,
+  TrendingUp,
+  Home,
+  Banknote,
+  HelpCircle,
+  Users,
+  Baby,
+  Truck,
+  Heart,
+  GraduationCap,
+  HeartHandshake,
   Accessibility,
   Calendar,
   ChevronDown,
   ChevronUp
 } from "lucide-react";
 
-
+const TabButton = ({ value, icon: Icon, label, isActive }) => (
+  <TabsTrigger
+    value={value}
+    className={`flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all ${isActive
+      ? 'bg-[#1e3a5f] text-white shadow-lg'
+      : 'bg-white text-slate-600 hover:bg-slate-50'
+      }`}
+  >
+    <Icon className="h-4 w-4" />
+    <span className="font-medium">{label}</span>
+  </TabsTrigger>
+);
 
 const CollapsibleSection = ({ title, icon: Icon, isOpen, onToggle, children, hint }) => (
   <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
@@ -103,9 +124,9 @@ export default function AdvancedCalculator({ data, onChange }) {
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full">
-          <TabsTrigger value="income" className="flex-1">Income</TabsTrigger>
-          <TabsTrigger value="savings" className="flex-1">Tax Savings</TabsTrigger>
+        <TabsList className="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-xl h-auto">
+          <TabButton value="income" icon={Wallet} label="Income" isActive={activeTab === "income"} />
+          <TabButton value="savings" icon={PiggyBank} label="Tax Savings" isActive={activeTab === "savings"} />
         </TabsList>
 
 
