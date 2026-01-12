@@ -131,111 +131,69 @@ export default function AdvancedCalculator({ data, onChange }) {
 
 
         <TabsContent value="income" className="mt-6 space-y-4">
-          {/* Always visible - Employment Income */}
-          <div className="bg-white rounded-lg border border-slate-200 p-4">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-slate-100 rounded-lg">
-                <Briefcase className="h-4 w-4 text-slate-600" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-slate-900">Employment Income</p>
-                <p className="text-xs text-slate-500">Your salary, wages, and bonuses</p>
-              </div>
-            </div>
-            <IncomeInput
-              id="employment"
-              label="Annual Employment Income (T4)"
-              value={data.income?.employment}
-              onChange={(value) => handleChange('income', 'employment', value)}
-              hint="Total from all employers before deductions"
-            />
-          </div>
-
-          {/* Collapsible sections */}
-          <CollapsibleSection
-            title="Do you have self-employment income?"
-            icon={Briefcase}
-            hint="Business, freelancing, or contract work"
-            isOpen={expandedSections.selfEmployment || (data.income?.selfEmployment > 0)}
-            onToggle={() => toggleSection('selfEmployment')}
-          >
-            <IncomeInput
-              id="self-employment"
-              label="Self-Employment Income"
-              value={data.income?.selfEmployment}
-              onChange={(value) => handleChange('income', 'selfEmployment', value)}
-              hint="Net business or professional income after expenses"
-            />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="Do you have investment income?"
-            icon={TrendingUp}
-            hint="Interest, dividends, or capital gains"
-            isOpen={expandedSections.investment || (data.income?.investment > 0)}
-            onToggle={() => toggleSection('investment')}
-          >
-            <IncomeInput
-              id="investment"
-              label="Investment Income"
-              value={data.income?.investment}
-              onChange={(value) => handleChange('income', 'investment', value)}
-              hint="Interest, dividends, capital gains (taxable portion)"
-            />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="Do you earn rental income?"
-            icon={Home}
-            hint="Income from rental properties"
-            isOpen={expandedSections.rental || (data.income?.rental > 0)}
-            onToggle={() => toggleSection('rental')}
-          >
-            <IncomeInput
-              id="rental"
-              label="Rental Income"
-              value={data.income?.rental}
-              onChange={(value) => handleChange('income', 'rental', value)}
-              hint="Net rental income after expenses"
-            />
-          </CollapsibleSection>
-
-          <CollapsibleSection
-            title="Other income sources?"
-            icon={Banknote}
-            hint="Pension, RRSP withdrawals, EI benefits, etc."
-            isOpen={expandedSections.otherIncome || (data.income?.pension > 0) || (data.income?.rrspWithdrawal > 0) || (data.income?.eiIncome > 0) || (data.income?.other > 0)}
-            onToggle={() => toggleSection('otherIncome')}
-          >
-            <IncomeInput
-              id="rrsp-withdrawal"
-              label="RRSP Withdrawals"
-              value={data.income?.rrspWithdrawal}
-              onChange={(value) => handleChange('income', 'rrspWithdrawal', value)}
-              hint="Amount withdrawn from RRSP (T4RSP)"
-            />
-            <IncomeInput
-              id="pension"
-              label="Pension Income"
-              value={data.income?.pension}
-              onChange={(value) => handleChange('income', 'pension', value)}
-              hint="CPP, OAS, employer pension"
-            />
-            <IncomeInput
-              id="ei-income"
-              label="EI Benefits"
-              value={data.income?.eiIncome}
-              onChange={(value) => handleChange('income', 'eiIncome', value)}
-              hint="Employment Insurance benefits received (T4E)"
-            />
-            <IncomeInput
-              id="other-income"
-              label="Other Income"
-              value={data.income?.other}
-              onChange={(value) => handleChange('income', 'other', value)}
-              hint="Scholarships, awards, prizes, etc."
-            />
-          </CollapsibleSection>
+          <IncomeInput
+            id="employment"
+            label="Employment Income"
+            value={data.income?.employment}
+            onChange={(value) => handleChange('income', 'employment', value)}
+            hint="Salary, wages, and bonuses (T4)"
+          />
+          
+          <IncomeInput
+            id="self-employment"
+            label="Self-Employment Income"
+            value={data.income?.selfEmployment}
+            onChange={(value) => handleChange('income', 'selfEmployment', value)}
+            hint="Net business or professional income after expenses"
+          />
+          
+          <IncomeInput
+            id="investment"
+            label="Investment Income"
+            value={data.income?.investment}
+            onChange={(value) => handleChange('income', 'investment', value)}
+            hint="Interest, dividends, capital gains (taxable portion)"
+          />
+          
+          <IncomeInput
+            id="rental"
+            label="Rental Income"
+            value={data.income?.rental}
+            onChange={(value) => handleChange('income', 'rental', value)}
+            hint="Net rental income after expenses"
+          />
+          
+          <IncomeInput
+            id="rrsp-withdrawal"
+            label="RRSP Withdrawals"
+            value={data.income?.rrspWithdrawal}
+            onChange={(value) => handleChange('income', 'rrspWithdrawal', value)}
+            hint="Amount withdrawn from RRSP (T4RSP)"
+          />
+          
+          <IncomeInput
+            id="pension"
+            label="Pension Income"
+            value={data.income?.pension}
+            onChange={(value) => handleChange('income', 'pension', value)}
+            hint="CPP, OAS, employer pension"
+          />
+          
+          <IncomeInput
+            id="ei-income"
+            label="EI Benefits"
+            value={data.income?.eiIncome}
+            onChange={(value) => handleChange('income', 'eiIncome', value)}
+            hint="Employment Insurance benefits received (T4E)"
+          />
+          
+          <IncomeInput
+            id="other-income"
+            label="Other Income"
+            value={data.income?.other}
+            onChange={(value) => handleChange('income', 'other', value)}
+            hint="Scholarships, awards, prizes, etc."
+          />
         </TabsContent>
 
         <TabsContent value="savings" className="mt-6 space-y-4">
