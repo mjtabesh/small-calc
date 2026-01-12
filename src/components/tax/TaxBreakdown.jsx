@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { TrendingDown, TrendingUp, Wallet, Building2, MapPin, PiggyBank, Receipt } from "lucide-react";
-import TaxCharts from "./TaxCharts";
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-CA', {
@@ -212,9 +211,6 @@ export default function TaxBreakdown({ results }) {
           </div>
         </div>
       </div>
-
-      {/* Interactive Charts */}
-      <TaxCharts results={results} />
 
     </motion.div>
   );
