@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingDown, TrendingUp, Wallet, Building2, MapPin, PiggyBank, Receipt, ChevronDown, ChevronRight, Info, Sparkles } from "lucide-react";
+import { TrendingDown, TrendingUp, Wallet, Building2, MapPin, PiggyBank, Receipt, ChevronDown, ChevronRight, Info } from "lucide-react";
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-CA', {
@@ -60,25 +60,7 @@ export default function TaxBreakdown({ results }) {
   ];
   const provinceName = PROVINCES.find(p => p.code === province)?.name || province;
 
-  const totalTaxAndContributions = totalTax + (cpp?.employment || 0) + (cpp?.selfEmployment || 0) + (ei?.premium || 0);
   const totalCreditsAmount = (credits?.federal?.total || 0) + (credits?.provincial?.total || 0);
-
-  // Generate insight
-  const getInsight = () => {
-    if (totalDeductions > totalTax * 0.3) {
-      return "Your deductions are working hard for you—they've significantly reduced your taxable income.";
-    }
-    if (effectiveTaxRate < marginalRate - 5) {
-      return "Your effective tax rate is lower than your marginal rate—this is normal and means you're not paying the top rate on all your income.";
-    }
-    if (totalCreditsAmount > 3000) {
-      return "Tax credits are reducing your tax bill significantly—make sure to keep claiming these next year.";
-    }
-    if ((cpp?.selfEmployment || 0) > (cpp?.employment || 0)) {
-      return "As self-employed, you pay both employee and employer CPP contributions—half is deductible from your income.";
-    }
-    return "Your tax calculation includes all federal and provincial rates based on your income level.";
-  };
 
   return (
     <motion.div
@@ -93,15 +75,7 @@ export default function TaxBreakdown({ results }) {
           <p className="text-sm text-white/60 mb-2">From {formatCurrency(totalIncome)} earned, your take-home is</p>
           <div className="text-5xl font-bold mb-3">{formatCurrency(takeHome)}</div>
           <p className="text-sm text-white/70">That's {formatCurrency(Math.round(takeHome / 12))} per month</p>
-          
-          {/* Progress bar */}
-          <div className="mt-6 bg-white/10 rounded-full h-2 overflow-hidden">
-            <div 
-              className="bg-white/80 h-full rounded-full transition-all duration-1000"
-              style={{ width: `${(takeHome / totalIncome) * 100}%` }}
-            />
-          </div>
-          <p className="text-xs text-white/50 mt-2">After income tax, CPP, EI, and credits</p>
+          <p className="text-xs text-white/50 mt-3">After income tax, CPP, EI, and credits</p>
         </div>
       </div>
 
@@ -109,7 +83,7 @@ export default function TaxBreakdown({ results }) {
       <div className="bg-white rounded-xl border border-slate-200 p-5">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-sm font-semibold text-slate-900 mb-1">Calculation Summary</h3>
+            <h3 className="text-sm font-semibold text-slate-900 mb-1">How this breaks down</h3>
             <p className="text-xs text-slate-500">See how we arrived at your take-home pay</p>
           </div>
           <button
@@ -157,9 +131,12 @@ export default function TaxBreakdown({ results }) {
           {showDetails && (
             <>
               <div className="border-t border-slate-100 pt-3">
-                <div className="flex items-center justify-between py-2 bg-slate-50 rounded-lg px-3">
-                  <span className="text-sm font-medium text-slate-700">Taxable Income</span>
-                  <span className="text-base font-semibold text-slate-900">{formatCurrency(taxableIncome)}</span>
+                <div className="bg-slate-50 rounded-lg px-3 py-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-slate-700">Taxable Income</span>
+                    <span className="text-base font-semibold text-slate-900">{formatCurrency(taxableIncome)}</span>
+                  </div>
+                  <p className="text-xs text-slate-500">This is the portion of your income that taxes are calculated on</p>
                 </div>
               </div>
 
@@ -170,7 +147,7 @@ export default function TaxBreakdown({ results }) {
               >
                 <div className="flex items-center gap-2">
                   {taxesOpen ? <ChevronDown className="h-3.5 w-3.5 text-slate-400" /> : <ChevronRight className="h-3.5 w-3.5 text-slate-400" />}
-                  <span className="text-sm text-slate-600">Income Taxes</span>
+                  <span className="text-sm text-slate-600">Income taxes paid</span>
                 </div>
                 <span className="text-base font-medium text-slate-700">-{formatCurrency(federalTax + provincialTax)}</span>
               </button>
@@ -187,7 +164,7 @@ export default function TaxBreakdown({ results }) {
                 </div>
               )}
 
-              {/* Mandatory Contributions */}
+              {/* Required Contributions */}
               {((cpp?.employment || 0) + (cpp?.selfEmployment || 0) + (ei?.premium || 0)) > 0 && (
                 <>
                   <button
@@ -196,7 +173,7 @@ export default function TaxBreakdown({ results }) {
                   >
                     <div className="flex items-center gap-2">
                       {contributionsOpen ? <ChevronDown className="h-3.5 w-3.5 text-slate-400" /> : <ChevronRight className="h-3.5 w-3.5 text-slate-400" />}
-                      <span className="text-sm text-slate-600">Mandatory Contributions</span>
+                      <span className="text-sm text-slate-600">Required contributions (CPP & EI)</span>
                     </div>
                     <span className="text-base font-medium text-slate-700">-{formatCurrency((cpp?.employment || 0) + (cpp?.selfEmployment || 0) + (ei?.premium || 0))}</span>
                   </button>
@@ -228,21 +205,21 @@ export default function TaxBreakdown({ results }) {
               {/* Credits */}
               {totalCreditsAmount > 0 && (
                 <>
-                  <button
-                    onClick={() => setCreditsOpen(!creditsOpen)}
-                    className="w-full flex items-center justify-between py-2 hover:bg-emerald-50 rounded-lg px-2 -mx-2 transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      {creditsOpen ? <ChevronDown className="h-3.5 w-3.5 text-emerald-600" /> : <ChevronRight className="h-3.5 w-3.5 text-emerald-600" />}
-                      <div className="text-left">
-                        <span className="text-sm text-slate-600 block">Credits Reducing Your Tax</span>
-                        <span className="text-xs text-slate-400">Applied dollar-for-dollar</span>
+                  <div className="bg-emerald-50 rounded-lg px-3 py-2.5 -mx-2">
+                    <p className="text-xs text-emerald-700 mb-2">These credits reduce your tax dollar-for-dollar</p>
+                    <button
+                      onClick={() => setCreditsOpen(!creditsOpen)}
+                      className="w-full flex items-center justify-between hover:opacity-80 transition-opacity"
+                    >
+                      <div className="flex items-center gap-2">
+                        {creditsOpen ? <ChevronDown className="h-3.5 w-3.5 text-emerald-600" /> : <ChevronRight className="h-3.5 w-3.5 text-emerald-600" />}
+                        <span className="text-sm font-medium text-emerald-900">Credits applied</span>
                       </div>
-                    </div>
-                    <span className="text-base font-medium text-emerald-600">-{formatCurrency(totalCreditsAmount)}</span>
-                  </button>
+                      <span className="text-base font-semibold text-emerald-700">-{formatCurrency(totalCreditsAmount)}</span>
+                    </button>
+                  </div>
                   {creditsOpen && (
-                    <div className="pl-8 space-y-3 pb-2">
+                    <div className="pl-6 space-y-3 pt-2">
                       {credits.federal?.items?.length > 0 && (
                         <>
                           <button
@@ -308,40 +285,37 @@ export default function TaxBreakdown({ results }) {
         >
           <div className="flex items-center gap-2">
             {ratesOpen ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronRight className="h-4 w-4 text-slate-400" />}
-            <span className="text-sm font-semibold text-slate-700">Your Tax Rates</span>
+            <div className="text-left">
+              <span className="text-sm font-semibold text-slate-700 block">Your tax rates</span>
+              <span className="text-xs text-slate-500">Understanding how much you pay</span>
+            </div>
           </div>
           <Info className="h-4 w-4 text-slate-400" />
         </button>
         
         {ratesOpen && (
-          <div className="px-5 pb-4 space-y-3 border-t border-slate-100">
-            <div className="flex items-center justify-between pt-3">
-              <div>
-                <span className="text-sm font-medium text-slate-900 block">Effective Rate</span>
-                <span className="text-xs text-slate-500">The average rate on all your income</span>
+          <div className="px-5 pb-5 space-y-4 border-t border-slate-100 pt-4">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-slate-900">Effective Rate</span>
+                <span className="text-2xl font-bold text-slate-900">{formatPercent(effectiveTaxRate)}</span>
               </div>
-              <span className="text-2xl font-bold text-slate-900">{formatPercent(effectiveTaxRate)}</span>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                This is your average tax rate across all your income. It shows what percentage of your total earnings went to taxes.
+              </p>
             </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-sm font-medium text-slate-900 block">Marginal Rate</span>
-                <span className="text-xs text-slate-500">The rate on your next dollar earned</span>
+            
+            <div className="border-t border-slate-100 pt-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-slate-900">Marginal Rate</span>
+                <span className="text-2xl font-bold text-slate-900">{formatPercent(marginalRate)}</span>
               </div>
-              <span className="text-2xl font-bold text-slate-900">{formatPercent(marginalRate)}</span>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                This rate applies only to your last dollars earned—not your entire income. It's what you'd pay on a bonus or raise.
+              </p>
             </div>
           </div>
         )}
-      </div>
-
-      {/* Insight */}
-      <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border border-indigo-100 p-4">
-        <div className="flex items-start gap-3">
-          <Sparkles className="h-5 w-5 text-indigo-500 mt-0.5 flex-shrink-0" />
-          <div>
-            <p className="text-sm font-medium text-indigo-900 mb-1">Insight</p>
-            <p className="text-sm text-indigo-700 leading-relaxed">{getInsight()}</p>
-          </div>
-        </div>
       </div>
     </motion.div>
   );
