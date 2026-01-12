@@ -99,7 +99,7 @@ export default function TaxBreakdown({ results }) {
           {/* Total Income */}
           <div className="flex items-center justify-between py-2">
             <span className="text-sm text-slate-600">Income</span>
-            <span className="text-base font-semibold text-slate-900">{formatCurrency(totalIncome)}</span>
+            <span className="text-sm font-semibold text-slate-900 tabular-nums">{formatCurrency(totalIncome)}</span>
           </div>
 
           {/* Deductions */}
@@ -113,14 +113,14 @@ export default function TaxBreakdown({ results }) {
                   {deductionsOpen ? <ChevronDown className="h-3.5 w-3.5 text-slate-400" /> : <ChevronRight className="h-3.5 w-3.5 text-slate-400" />}
                   <span className="text-sm text-slate-600">Deductions</span>
                 </div>
-                <span className="text-base font-medium text-slate-700">-{formatCurrency(totalDeductions)}</span>
+                <span className="text-sm font-medium text-slate-700 tabular-nums">-{formatCurrency(totalDeductions)}</span>
               </button>
               {deductionsOpen && (
                 <div className="pl-8 space-y-2 pb-2">
                   {deductionItems.map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-xs">
-                      <span className="text-slate-500">{item.label}</span>
-                      <span className="text-slate-600 font-medium">-{formatCurrency(item.amount)}</span>
+                    <div key={idx} className="flex items-center justify-between">
+                      <span className="text-sm text-slate-500">{item.label}</span>
+                      <span className="text-sm text-slate-600 font-medium tabular-nums">-{formatCurrency(item.amount)}</span>
                     </div>
                   ))}
                 </div>
@@ -134,9 +134,9 @@ export default function TaxBreakdown({ results }) {
                 <div className="bg-slate-50 rounded-lg px-3 py-2">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm font-medium text-slate-700">Taxable Income</span>
-                    <span className="text-base font-semibold text-slate-900">{formatCurrency(taxableIncome)}</span>
+                    <span className="text-sm font-semibold text-slate-900 tabular-nums">{formatCurrency(taxableIncome)}</span>
                   </div>
-                  <p className="text-xs text-slate-500">This is the portion of your income that taxes are calculated on</p>
+                  <p className="text-sm text-slate-500">This is the portion of your income that taxes are calculated on</p>
                 </div>
               </div>
 
@@ -149,17 +149,17 @@ export default function TaxBreakdown({ results }) {
                   {taxesOpen ? <ChevronDown className="h-3.5 w-3.5 text-slate-400" /> : <ChevronRight className="h-3.5 w-3.5 text-slate-400" />}
                   <span className="text-sm text-slate-600">Income taxes paid</span>
                 </div>
-                <span className="text-base font-medium text-slate-700">-{formatCurrency(federalTax + provincialTax)}</span>
+                <span className="text-sm font-medium text-slate-700 tabular-nums">-{formatCurrency(federalTax + provincialTax)}</span>
               </button>
               {taxesOpen && (
                 <div className="pl-8 space-y-2 pb-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-500">Federal</span>
-                    <span className="text-slate-600 font-medium">{formatCurrency(federalTax)}</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-500">Federal</span>
+                    <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(federalTax)}</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-500">{provinceName}</span>
-                    <span className="text-slate-600 font-medium">{formatCurrency(provincialTax)}</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-500">{provinceName}</span>
+                    <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(provincialTax)}</span>
                   </div>
                 </div>
               )}
@@ -175,26 +175,26 @@ export default function TaxBreakdown({ results }) {
                       {contributionsOpen ? <ChevronDown className="h-3.5 w-3.5 text-slate-400" /> : <ChevronRight className="h-3.5 w-3.5 text-slate-400" />}
                       <span className="text-sm text-slate-600">Required contributions (CPP & EI)</span>
                     </div>
-                    <span className="text-base font-medium text-slate-700">-{formatCurrency((cpp?.employment || 0) + (cpp?.selfEmployment || 0) + (ei?.premium || 0))}</span>
+                    <span className="text-sm font-medium text-slate-700 tabular-nums">-{formatCurrency((cpp?.employment || 0) + (cpp?.selfEmployment || 0) + (ei?.premium || 0))}</span>
                   </button>
                   {contributionsOpen && (
                     <div className="pl-8 space-y-2 pb-2">
                       {cpp?.employment > 0 && (
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-slate-500">CPP (Employment)</span>
-                          <span className="text-slate-600 font-medium">{formatCurrency(cpp.employment)}</span>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-slate-500">CPP (Employment)</span>
+                          <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(cpp.employment)}</span>
                         </div>
                       )}
                       {cpp?.selfEmployment > 0 && (
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-slate-500">CPP (Self-Employment)</span>
-                          <span className="text-slate-600 font-medium">{formatCurrency(cpp.selfEmployment)}</span>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-slate-500">CPP (Self-Employment)</span>
+                          <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(cpp.selfEmployment)}</span>
                         </div>
                       )}
                       {ei?.premium > 0 && (
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-slate-500">EI Premium</span>
-                          <span className="text-slate-600 font-medium">{formatCurrency(ei.premium)}</span>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-slate-500">EI Premium</span>
+                          <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(ei.premium)}</span>
                         </div>
                       )}
                     </div>
@@ -206,7 +206,7 @@ export default function TaxBreakdown({ results }) {
               {totalCreditsAmount > 0 && (
                 <>
                   <div className="bg-emerald-50 rounded-lg px-3 py-2.5 -mx-2">
-                    <p className="text-xs text-emerald-700 mb-2">These credits reduce your tax dollar-for-dollar</p>
+                    <p className="text-sm text-emerald-700 mb-2">These credits reduce your tax dollar-for-dollar</p>
                     <button
                       onClick={() => setCreditsOpen(!creditsOpen)}
                       className="w-full flex items-center justify-between hover:opacity-80 transition-opacity"
@@ -215,7 +215,7 @@ export default function TaxBreakdown({ results }) {
                         {creditsOpen ? <ChevronDown className="h-3.5 w-3.5 text-emerald-600" /> : <ChevronRight className="h-3.5 w-3.5 text-emerald-600" />}
                         <span className="text-sm font-medium text-emerald-900">Credits applied</span>
                       </div>
-                      <span className="text-base font-semibold text-emerald-700">-{formatCurrency(totalCreditsAmount)}</span>
+                      <span className="text-sm font-semibold text-emerald-700 tabular-nums">-{formatCurrency(totalCreditsAmount)}</span>
                     </button>
                   </div>
                   {creditsOpen && (
@@ -224,20 +224,20 @@ export default function TaxBreakdown({ results }) {
                         <>
                           <button
                             onClick={() => setFederalCreditsOpen(!federalCreditsOpen)}
-                            className="w-full flex items-center justify-between text-xs hover:bg-emerald-50/50 rounded py-1"
+                            className="w-full flex items-center justify-between hover:bg-emerald-50/50 rounded py-1"
                           >
                             <div className="flex items-center gap-1.5">
                               {federalCreditsOpen ? <ChevronDown className="h-3 w-3 text-emerald-500" /> : <ChevronRight className="h-3 w-3 text-emerald-500" />}
-                              <span className="text-slate-500">Federal</span>
+                              <span className="text-sm text-slate-500">Federal</span>
                             </div>
-                            <span className="text-slate-600 font-medium">{formatCurrency(credits.federal.total)}</span>
+                            <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(credits.federal.total)}</span>
                           </button>
                           {federalCreditsOpen && (
                             <div className="pl-6 space-y-1.5">
                               {credits.federal.items.map((item, idx) => (
-                                <div key={`fed-${idx}`} className="flex items-center justify-between text-xs">
-                                  <span className="text-slate-400">{item.label}</span>
-                                  <span className="text-slate-500">{formatCurrency(item.amount)}</span>
+                                <div key={`fed-${idx}`} className="flex items-center justify-between">
+                                  <span className="text-sm text-slate-400">{item.label}</span>
+                                  <span className="text-sm text-slate-500 tabular-nums">{formatCurrency(item.amount)}</span>
                                 </div>
                               ))}
                             </div>
@@ -248,20 +248,20 @@ export default function TaxBreakdown({ results }) {
                         <>
                           <button
                             onClick={() => setProvincialCreditsOpen(!provincialCreditsOpen)}
-                            className="w-full flex items-center justify-between text-xs hover:bg-emerald-50/50 rounded py-1"
+                            className="w-full flex items-center justify-between hover:bg-emerald-50/50 rounded py-1"
                           >
                             <div className="flex items-center gap-1.5">
                               {provincialCreditsOpen ? <ChevronDown className="h-3 w-3 text-emerald-500" /> : <ChevronRight className="h-3 w-3 text-emerald-500" />}
-                              <span className="text-slate-500">{provinceName}</span>
+                              <span className="text-sm text-slate-500">{provinceName}</span>
                             </div>
-                            <span className="text-slate-600 font-medium">{formatCurrency(credits.provincial.total)}</span>
+                            <span className="text-sm text-slate-600 font-medium tabular-nums">{formatCurrency(credits.provincial.total)}</span>
                           </button>
                           {provincialCreditsOpen && (
                             <div className="pl-6 space-y-1.5">
                               {credits.provincial.items.map((item, idx) => (
-                                <div key={`prov-${idx}`} className="flex items-center justify-between text-xs">
-                                  <span className="text-slate-400">{item.label}</span>
-                                  <span className="text-slate-500">{formatCurrency(item.amount)}</span>
+                                <div key={`prov-${idx}`} className="flex items-center justify-between">
+                                  <span className="text-sm text-slate-400">{item.label}</span>
+                                  <span className="text-sm text-slate-500 tabular-nums">{formatCurrency(item.amount)}</span>
                                 </div>
                               ))}
                             </div>
@@ -298,9 +298,9 @@ export default function TaxBreakdown({ results }) {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-slate-900">Effective Rate</span>
-                <span className="text-2xl font-bold text-slate-900">{formatPercent(effectiveTaxRate)}</span>
+                <span className="text-2xl font-bold text-slate-900 tabular-nums">{formatPercent(effectiveTaxRate)}</span>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 This is your average tax rate across all your income. It shows what percentage of your total earnings went to taxes.
               </p>
             </div>
@@ -308,9 +308,9 @@ export default function TaxBreakdown({ results }) {
             <div className="border-t border-slate-100 pt-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-slate-900">Marginal Rate</span>
-                <span className="text-2xl font-bold text-slate-900">{formatPercent(marginalRate)}</span>
+                <span className="text-2xl font-bold text-slate-900 tabular-nums">{formatPercent(marginalRate)}</span>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 This rate applies only to your last dollars earned—not your entire income. It's what you'd pay on a bonus or raise.
               </p>
             </div>
