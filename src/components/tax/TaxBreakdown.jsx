@@ -208,7 +208,7 @@ export default function TaxBreakdown({ results }) {
           )}
 
           {/* Net Income / Take-Home */}
-          <div className="p-5 flex items-center justify-between bg-gradient-to-br from-[#1e3a5f] to-[#0f2744]">
+          <div className="p-6 flex items-center justify-between bg-slate-900">
             <div>
               <span className="text-sm text-white/70 block">Your Take-Home Pay</span>
               <span className="text-xs text-white/50">{formatCurrency(takeHome / 12)}/month</span>
