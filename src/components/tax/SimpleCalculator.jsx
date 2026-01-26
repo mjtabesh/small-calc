@@ -15,14 +15,14 @@ export default function SimpleCalculator({ data, onChange }) {
       exit={{ opacity: 0 }}
       className="space-y-6"
     >
-      <div className="bg-gradient-to-r from-teal-50 to-blue-50 rounded-xl p-4 border border-teal-100">
+      <div className="bg-gradient-to-r from-indigo-50/50 to-purple-50/50 rounded-xl p-4 border border-slate-200/60 backdrop-blur-sm">
         <div className="flex items-start gap-3">
-          <div className="p-2 bg-teal-100 rounded-lg">
-            <Briefcase className="h-4 w-4 text-teal-700" />
+          <div className="p-2 bg-slate-100/60 rounded-lg">
+            <Briefcase className="h-4 w-4 text-slate-700" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-teal-900">Quick Estimate</h3>
-            <p className="text-xs text-teal-700 mt-0.5">
+            <h3 className="text-sm font-medium text-slate-900">Quick Estimate</h3>
+            <p className="text-xs text-slate-600 mt-0.5">
               Enter your employment income and province for a quick tax estimate.
             </p>
           </div>

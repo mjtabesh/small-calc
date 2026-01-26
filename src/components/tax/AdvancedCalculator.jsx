@@ -29,8 +29,8 @@ const TabButton = ({ value, icon: Icon, label, isActive }) => (
   <TabsTrigger
     value={value}
     className={`flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all ${isActive
-      ? 'bg-[#1e3a5f] text-white shadow-lg'
-      : 'bg-white text-slate-600 hover:bg-slate-50'
+      ? 'bg-slate-900 text-white shadow-md'
+      : 'bg-white/50 text-slate-600 hover:bg-white'
       }`}
   >
     <Icon className="h-4 w-4" />
@@ -39,13 +39,13 @@ const TabButton = ({ value, icon: Icon, label, isActive }) => (
 );
 
 const CollapsibleSection = ({ title, icon: Icon, isOpen, onToggle, children, hint }) => (
-  <div className="border border-slate-200 rounded-lg overflow-hidden bg-white">
+  <div className="border border-slate-200/60 rounded-xl overflow-hidden bg-white/40 backdrop-blur-sm">
     <button
       onClick={onToggle}
-      className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
+      className="w-full flex items-center justify-between p-4 hover:bg-white/60 transition-colors"
     >
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-slate-100 rounded-lg">
+        <div className="p-2 bg-slate-100/60 rounded-lg">
           <Icon className="h-4 w-4 text-slate-600" />
         </div>
         <div className="text-left">
@@ -124,7 +124,7 @@ export default function AdvancedCalculator({ data, onChange }) {
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-xl h-auto">
+        <TabsList className="grid grid-cols-2 gap-2 bg-slate-100/60 p-1.5 rounded-xl h-auto backdrop-blur-sm">
           <TabButton value="income" icon={Wallet} label="Income" isActive={activeTab === "income"} />
           <TabButton value="savings" icon={PiggyBank} label="Tax Savings" isActive={activeTab === "savings"} />
         </TabsList>

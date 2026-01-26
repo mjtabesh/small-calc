@@ -32,7 +32,7 @@ export default function IncomeInput({
           allowNegative={false}
           placeholder={placeholder}
           customInput={Input}
-          className="pl-9 h-12 bg-white border-slate-200 focus:ring-teal-500 focus:border-teal-500 text-right font-mono"
+          className="pl-9 h-12 bg-white/60 backdrop-blur-sm border-slate-200/60 focus:ring-slate-400 focus:border-slate-400 text-right font-mono"
         />
       </div>
       {hint && <p className="text-xs text-slate-500">{hint}</p>}
