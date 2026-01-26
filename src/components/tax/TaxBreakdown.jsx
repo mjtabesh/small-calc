@@ -64,7 +64,7 @@ export default function TaxBreakdown({ results }) {
       className="space-y-6"
     >
       {/* Tax Calculation Table */}
-      <div className="bg-white/60 backdrop-blur-xl rounded-2xl border border-slate-200/60 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <div className="divide-y divide-slate-200">
           {/* Total Income */}
           <div className="p-4 flex items-center justify-between">
@@ -208,7 +208,7 @@ export default function TaxBreakdown({ results }) {
           )}
 
           {/* Net Income / Take-Home */}
-          <div className="p-6 flex items-center justify-between bg-slate-900">
+          <div className="p-5 flex items-center justify-between bg-gradient-to-br from-[#1e3a5f] to-[#0f2744]">
             <div>
               <span className="text-sm text-white/70 block">Your Take-Home Pay</span>
               <span className="text-xs text-white/50">{formatCurrency(takeHome / 12)}/month</span>
@@ -219,8 +219,8 @@ export default function TaxBreakdown({ results }) {
       </div>
 
       {/* Tax Rates Table */}
-      <div className="bg-white/60 backdrop-blur-xl rounded-2xl border border-slate-200/60 overflow-hidden shadow-sm">
-        <div className="px-4 py-3 bg-slate-50/50 border-b border-slate-200/60">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
           <span className="text-sm font-semibold text-slate-700">Tax Rates</span>
         </div>
         <div className="divide-y divide-slate-200">
